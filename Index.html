@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff5722">
+<title>Apnivibe - Food Delivery</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff8f2;color:#292321}
+header{background:#ff5722;color:white;padding:20px 16px;border-radius:0 0 22px 22px}
+header h1{margin:0;font-size:28px}
+header p{margin:7px 0 0;font-size:14px}
+.search{width:100%;padding:13px;border:1px solid #ddd;border-radius:12px;margin-top:16px;font-size:16px}
+main{padding:16px;max-width:700px;margin:auto}
+h2{font-size:20px}
+.categories{display:flex;gap:9px;overflow:auto;padding:5px 0 15px}
+.categories button{border:0;background:#ffe2d4;padding:10px 15px;border-radius:20px;white-space:nowrap}
+.categories button.active{background:#ff5722;color:white}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item{background:white;border-radius:15px;padding:12px;box-shadow:0 2px 9px #0000000c}
+.food{font-size:48px;text-align:center;background:#fff0e7;border-radius:12px;padding:12px}
+.item h3{font-size:16px;margin:10px 0 5px}
+.price{font-weight:bold;color:#e64a19}
+.item button,.orderbtn{width:100%;border:0;background:#ff5722;color:white;padding:11px;border-radius:9px;margin-top:10px;font-size:15px}
+.cart,.checkout{background:white;padding:15px;border-radius:15px;margin-top:20px}
+.cartrow{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #eee}
+input,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:9px;font-size:15px}
+.total{font-size:18px;font-weight:bold;margin-top:12px}
+footer{text-align:center;padding:25px;color:#777;font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍔 Apnivibe</h1>
+  <p>आपके गाँव का अपना Food Delivery App</p>
+  <input class="search" id="search" placeholder="खाना खोजें..." oninput="renderMenu()">
+</header>
+
+<main>
+  <h2>आज क्या खाना पसंद करेंगे? 😋</h2>
+  <div class="categories">
+    <button class="active" onclick="setCategory('सभी',this)">सभी</button>
+    <button onclick="setCategory('Burger',this)">🍔 Burger</button>
+    <button onclick="setCategory('Pizza',this)">🍕 Pizza</button>
+    <button onclick="setCategory('Momos',this)">🥟 Momos</button>
+    <button onclick="setCategory('Sandwich',this)">🥪 Sandwich</button>
+    <button onclick="setCategory('Drinks',this)">🥤 Drinks</button>
+  </div>
+
+  <div class="menu" id="menu"></div>
+
+  <section class="cart">
+    <h2>🛒 आपका Cart</h2>
+    <div id="cartItems">अभी Cart खाली है।</div>
+    <div class="total" id="total">कुल: ₹0</div>
+  </section>
+
+  <section class="checkout">
+    <h2>📦 Order की जानकारी</h2>
+    <input id="customer" placeholder="आपका नाम">
+    <input id="phone" type="tel" placeholder="मोबाइल नंबर">
+    <textarea id="address" placeholder="पूरा डिलीवरी पता"></textarea>
+    <button class="orderbtn" onclick="placeOrder()">Cash on Delivery से Order करें</button>
+    <p id="message"></p>
+  </section>
+</main>
+
+<footer>© 2026 Apnivibe | आपका अपना Food Delivery App ❤️</footer>
+
+<script>
+const foods = [
+ {id:1,name:"Veg Burger",price:60,cat:"Burger",emoji:"🍔"},
+ {id:2,name:"Cheese Burger",price:90,cat:"Burger",emoji:"🍔"},
+ {id:3,name:"Veg Pizza",price:120,cat:"Pizza",emoji:"🍕"},
+ {id:4,name:"Cheese Pizza",price:160,cat:"Pizza",emoji:"🍕"},
+ {id:5,name:"Veg Momos",price:60,cat:"Momos",emoji:"🥟"},
+ {id:6,name:"Fried Momos",price:80,cat:"Momos",emoji:"🥟"},
+ {id:7,name:"Sandwich",price:50,cat:"Sandwich",emoji:"🥪"},
+ {id:8,name:"Cheese Sandwich",price:80,cat:"Sandwich",emoji:"🥪"},
+ {id:9,name:"Cold Drink",price:40,cat:"Drinks",emoji:"🥤"},
+ {id:10,name:"Lemon Soda",price:30,cat:"Drinks",emoji:"🍋"}
+];
+
+let cart = {};
+let category = "सभी";
+
+function renderMenu(){
+ const search = document.getElementById("search").value.toLowerCase();
+ const list = foods.filter(f =>
+  (category==="सभी" || f.cat===category) &&
+  f.name.toLowerCase().includes(search)
+ );
+ document.getElementById("menu").innerHTML = list.map(f => `
+  <div class="item">
+   <div class="food">${f.emoji}</div>
+   <h3>${f.name}</h3>
+   <div class="price">₹${f.price}</div>
+   <button onclick="addToCart(${f.id})">+ Add</button>
+  </div>
+ `).join("");
+}
+
+function setCategory(cat,btn){
+ category=cat;
+ document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ renderMenu();
+}
+
+function addToCart(id){
+ cart[id]=(cart[id]||0)+1;
+ renderCart();
+}
+
+function changeQty(id,amount){
+ cart[id]=(cart[id]||0)+amount;
+ if(cart[id]<=0) delete cart[id];
+ renderCart();
+}
+
+function renderCart(){
+ let total=0;
+ let html="";
+ Object.keys(cart).forEach(id=>{
+  const f=foods.find(x=>x.id==id);
+  const qty=cart[id];
+  total+=f.price*qty;
+  html+=`<div class="cartrow">
+   <span>${f.emoji} ${f.name} × ${qty}</span>
+   <span>
+    ₹${f.price*qty}
+    <button onclick="changeQty(${id},-1)">−</button>
+    <button onclick="changeQty(${id},1)">+</button>
+   </span>
+  </div>`;
+ });
+ document.getElementById("cartItems").innerHTML=html||"अभी Cart खाली है।";
+ document.getElementById("total").innerText="कुल: ₹"+total;
+}
+
+function placeOrder(){
+ const name=document.getElementById("customer").value.trim();
+ const phone=document.getElementById("phone").value.trim();
+ const address=document.getElementById("address").value.trim();
+ const ids=Object.keys(cart);
+
+ if(ids.length===0){alert("पहले Cart में खाना जोड़ें।");return;}
+ if(!name||!phone||!address){alert("कृपया नाम, मोबाइल नंबर और पता भरें।");return;}
+ if(!/^[6-9]\d{9}$/.test(phone)){alert("सही 10 अंकों का मोबाइल नंबर डालें।");return;}
+
+ let total=0;
+ let details=ids.map(id=>{
+  const f=foods.find(x=>x.id==id);
+  total+=f.price*cart[id];
+  return f.name+" x "+cart[id];
+ }).join(", ");
+
+ const order={
+  name,phone,address,items:details,total,
+  payment:"Cash on Delivery",
+  date:new Date().toLocaleString("hi-IN")
+ };
+
+ localStorage.setItem("apnivibe_last_order",JSON.stringify(order));
+ document.getElementById("message").innerText=
+  "आपका Demo Order दर्ज हो गया! कुल राशि: ₹"+total+
+  ". अभी यह ऑर्डर केवल इसी फोन में सेव हुआ है।";
+ cart={};
+ renderCart();
+}
+
+renderMenu();
+renderCart();
+</script>
+</body>
+</html>
