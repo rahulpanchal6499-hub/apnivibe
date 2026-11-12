@@ -1,394 +1,682 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ApniVibe - Food & Grocery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>ApniVibe | Food & Grocery Delivery</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <style>
+:root {
+  --dark:#111827;
+  --green:#16a34a;
+  --orange:#f97316;
+  --light:#f8fafc;
+  --white:#ffffff;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222}
-header{background:#087f5b;color:white;text-align:center;padding:22px}
-header h1{font-size:32px;margin:0}
-nav{display:flex;gap:7px;overflow-x:auto;padding:12px;background:white;position:sticky;top:0;z-index:10}
-button{border:0;background:#087f5b;color:white;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer;white-space:nowrap}
-button.red{background:#d63031}
-button.gray{background:#555}
-.page{display:none;max-width:1100px;margin:auto;padding:15px}
-.page.active{display:block}
-.hero{background:linear-gradient(120deg,#087f5b,#27ae80);color:white;padding:35px 22px;border-radius:15px}
-.card{background:white;padding:15px;border-radius:12px;margin:12px 0;box-shadow:0 2px 9px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
-.product img{width:100%;height:150px;object-fit:cover;border-radius:9px}
-.price{font-size:20px;font-weight:bold;color:#087f5b}
-input,textarea,select{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:8px}
-textarea{min-height:75px}
-.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
-.item div{flex:1}
-.total{font-size:22px;font-weight:bold;color:#087f5b}
-.badge{background:#e5f7ed;padding:8px;border-radius:7px;color:#087f5b}
-footer{text-align:center;padding:25px;color:#777}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:var(--light);
+ color:var(--dark);
+}
+header{
+ background:#111827;
+ color:white;
+ padding:17px 5%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ position:sticky;
+ top:0;
+ z-index:10;
+}
+.logo{font-size:25px;font-weight:bold;color:#4ade80}
+nav{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+nav a{color:white;text-decoration:none;font-size:14px}
+button{
+ border:0;
+ padding:11px 17px;
+ border-radius:9px;
+ background:var(--green);
+ color:white;
+ font-weight:bold;
+ cursor:pointer;
+}
+button:hover{opacity:.85}
+.hero{
+ padding:65px 7%;
+ background:linear-gradient(120deg,#064e3b,#16a34a);
+ color:white;
+}
+.hero h1{font-size:42px;margin:0 0 15px}
+.hero p{font-size:18px}
+.hero button{background:#f97316;margin-top:12px}
+.container{padding:30px 5%}
+.section-title{font-size:25px;margin-bottom:20px}
+.categories{
+ display:flex;
+ gap:12px;
+ flex-wrap:wrap;
+ margin-bottom:25px;
+}
+.categories button{background:#e5e7eb;color:#111827}
+.categories button.active{background:#16a34a;color:white}
+.products{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+ gap:18px;
+}
+.product{
+ background:white;
+ border-radius:15px;
+ overflow:hidden;
+ box-shadow:0 3px 14px #00000012;
+}
+.product img{
+ width:100%;
+ height:145px;
+ object-fit:cover;
+ background:#eee;
+}
+.product-info{padding:14px}
+.product h3{margin:5px 0}
+.price{font-size:19px;color:#16a34a;font-weight:bold}
+.product button{width:100%;margin-top:10px}
+.panel{
+ background:white;
+ border-radius:14px;
+ padding:20px;
+ margin:20px 0;
+ box-shadow:0 3px 15px #00000010;
+}
+input,select,textarea{
+ width:100%;
+ padding:12px;
+ margin:7px 0 13px;
+ border:1px solid #d1d5db;
+ border-radius:8px;
+ font-size:15px;
+}
+.cart-item{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:12px 0;
+ border-bottom:1px solid #eee;
+}
+.hidden{display:none!important}
+.total{font-size:23px;font-weight:bold;color:#15803d}
+footer{
+ background:#111827;
+ color:white;
+ padding:30px;
+ text-align:center;
+ margin-top:40px;
+}
+#message{padding:12px;color:#166534}
+@media(max-width:600px){
+ header{padding:13px;flex-wrap:wrap;gap:12px}
+ nav{gap:10px}
+ .hero h1{font-size:31px}
+ .hero{padding:45px 6%}
+ .container{padding:22px 4%}
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>ApniVibe</h1>
-<p>Food & Grocery Delivery</p>
+ <div class="logo">ApniVibe</div>
+ <nav>
+  <a href="#home">Home</a>
+  <a href="#food">Food</a>
+  <a href="#grocery">Grocery</a>
+  <a href="#cart">Cart 🛒 <span id="cartCount">0</span></a>
+  <a href="#account">Account</a>
+ </nav>
 </header>
 
-<nav>
-<button onclick="show('home')">Home</button>
-<button onclick="show('food')">Food</button>
-<button onclick="show('grocery')">Grocery</button>
-<button onclick="show('cart')">Cart (<span id="count">0</span>)</button>
-<button onclick="show('orders')">My Orders</button>
-<button onclick="show('store')">Store</button>
-<button onclick="show('delivery')">Delivery</button>
-<button onclick="show('admin')">Admin</button>
-</nav>
-
-<section id="home" class="page active">
-<div class="hero">
-<h2>Welcome to ApniVibe!</h2>
-<p>Your Food & Grocery, Delivered to Your Doorstep.</p>
-<button onclick="show('food')">Order Food</button>
-<button onclick="show('grocery')">Shop Grocery</button>
-</div>
-<div class="grid">
-<div class="card">
-<h2>🍔 Food</h2>
-<p>Fresh and Delicious Food</p>
-<button onclick="show('food')">Explore Food</button>
-</div>
-<div class="card">
-<h2>🛒 Grocery</h2>
-<p>Daily Needs at One Place</p>
-<button onclick="show('grocery')">Explore Grocery</button>
-</div>
-</div>
+<section class="hero" id="home">
+ <h1>ApniVibe में आपका स्वागत है!</h1>
+ <p>आपका पसंदीदा खाना और रोज़मर्रा का सामान, अब आपके दरवाज़े पर।</p>
+ <button onclick="document.getElementById('food').scrollIntoView()">Order Now</button>
 </section>
 
-<section id="food" class="page">
-<div class="card">
-<h2>🍔 Food Menu</h2>
-<input id="foodSearch" placeholder="Search Food..." oninput="render('food')">
-<div id="foodList" class="grid"></div>
-</div>
+<main class="container">
+
+<section id="food">
+ <h2 class="section-title">🍕 Delicious Food</h2>
+ <div class="products" id="foodProducts"></div>
 </section>
 
-<section id="grocery" class="page">
-<div class="card">
-<h2>🛒 Grocery Store</h2>
-<input id="grocerySearch" placeholder="Search Grocery..." oninput="render('grocery')">
-<div id="groceryList" class="grid"></div>
-</div>
+<section id="grocery" style="margin-top:40px">
+ <h2 class="section-title">🥦 Fresh Grocery</h2>
+ <div class="products" id="groceryProducts"></div>
 </section>
 
-<section id="cart" class="page">
-<div class="card">
-<h2>Your Cart 🛒</h2>
-<div id="cartItems"></div>
-<p class="total">Total: ₹<span id="total">0</span></p>
-<hr>
-<h3>Delivery Details</h3>
-<input id="name" placeholder="Your Name">
-<input id="phone" placeholder="10 Digit Mobile Number" maxlength="10" oninput="renderCart()">
-<textarea id="address" placeholder="Full Delivery Address"></textarea>
-<h3>Payment Method</h3>
-<select id="payment">
-<option value="COD">Cash On Delivery</option>
-<option value="UPI">UPI</option>
-<option value="CARD">Debit/Credit Card</option>
-</select>
-<div id="advanceInfo"></div>
-<button onclick="checkout()">Place Order</button>
-<p>Minimum Order ₹200</p>
-</div>
+<section id="cart" class="panel">
+ <h2>🛒 आपका Shopping Cart</h2>
+ <div id="cartItems">आपका Cart खाली है।</div>
+ <p class="total">Total: ₹<span id="total">0</span></p>
+ <button onclick="showCheckout()">Proceed to Checkout</button>
 </section>
 
-<section id="orders" class="page">
-<div class="card">
-<h2>My Orders / Shopping History</h2>
-<input id="historyPhone" placeholder="Enter your mobile number">
-<button onclick="renderOrders()">View Orders</button>
-<div id="orderList"></div>
-</div>
+<section id="checkout" class="panel hidden">
+ <h2>📍 Delivery Details</h2>
+ <label>पूरा नाम</label>
+ <input id="deliveryName" placeholder="अपना नाम">
+
+ <label>मोबाइल नंबर</label>
+ <input id="deliveryPhone" placeholder="10 अंकों का मोबाइल नंबर">
+
+ <label>Delivery Address</label>
+ <textarea id="deliveryAddress" placeholder="मकान नंबर, गली, शहर, पिन कोड"></textarea>
+
+ <label>Payment Method</label>
+ <select id="paymentMethod">
+  <option value="razorpay">Online Payment (Razorpay)</option>
+ </select>
+
+ <button onclick="placeOrder()">Pay & Place Order</button>
+ <p id="checkoutMessage"></p>
 </section>
 
-<section id="store" class="page">
-<div class="card">
-<h2>🏪 Store Dashboard</h2>
-<h3>Add Product</h3>
-<input id="pname" placeholder="Product Name">
-<input id="pprice" type="number" placeholder="Product Price">
-<input id="pimage" placeholder="Image URL">
-<select id="pcat">
-<option value="food">Food</option>
-<option value="grocery">Grocery</option>
-</select>
-<button onclick="addProduct()">Add Product</button>
-<h3>Store Orders</h3>
-<div id="storeOrders"></div>
-</div>
+<section id="account" class="panel">
+ <h2>👤 My Account</h2>
+ <div id="loggedOut">
+  <h3>Email Login / Signup</h3>
+  <input id="email" type="email" placeholder="Gmail / Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Create Account</button>
+  <button onclick="login()" style="background:#2563eb">Login</button>
+
+  <hr>
+  <h3>Mobile OTP Login</h3>
+  <input id="mobile" type="tel" placeholder="+91XXXXXXXXXX">
+  <div id="recaptcha-container"></div>
+  <button onclick="sendOTP()">Send OTP</button>
+  <input id="otp" placeholder="Enter OTP">
+  <button onclick="verifyOTP()">Verify OTP</button>
+ </div>
+
+ <div id="loggedIn" class="hidden">
+  <p id="userInfo"></p>
+  <button onclick="loadOrders()">My Orders</button>
+  <button onclick="logout()" style="background:#dc2626">Logout</button>
+  <div id="myOrders"></div>
+ </div>
+ <p id="message"></p>
 </section>
 
-<section id="delivery" class="page">
-<div class="card">
-<h2>🚴 Delivery Partner Dashboard</h2>
-<div id="deliveryOrders"></div>
-</div>
+<section id="dashboard" class="panel hidden">
+ <h2>🔐 Authorized Dashboard</h2>
+ <p id="roleInfo"></p>
+ <div id="dashboardContent"></div>
 </section>
 
-<section id="admin" class="page">
-<div class="card">
-<h2>👑 Admin Dashboard</h2>
-<h3>All Orders</h3>
-<div id="adminOrders"></div>
-<h3>Customer Cancellation Records</h3>
-<div id="cancelRecords"></div>
-</div>
-</section>
+</main>
 
-<footer>© 2026 ApniVibe | All Rights Reserved</footer>
+<footer>
+ <h2>ApniVibe</h2>
+ <p>Food & Grocery Delivery Platform</p>
+ <p>Fresh Food | Fresh Grocery | Fast Delivery</p>
+ <p>© 2026 ApniVibe. All Rights Reserved.</p>
+</footer>
 
-<script>
-const defaults=[
-{id:1,name:"Veg Pizza",price:199,cat:"food",img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500"},
-{id:2,name:"Burger",price:120,cat:"food",img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"},
-{id:3,name:"Momos",price:100,cat:"food",img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500"},
-{id:4,name:"Sandwich",price:110,cat:"food",img:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500"},
-{id:5,name:"Fresh Apples",price:140,cat:"grocery",img:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"},
-{id:6,name:"Milk 1L",price:65,cat:"grocery",img:"https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500"},
-{id:7,name:"Tomato 1kg",price:40,cat:"grocery",img:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500"},
-{id:8,name:"Rice 1kg",price:70,cat:"grocery",img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500"}
-];
+<script type="module">
 
-let products=JSON.parse(localStorage.getItem("av_products")||"null")||defaults;
-let cart=JSON.parse(localStorage.getItem("av_cart")||"[]");
-let orders=JSON.parse(localStorage.getItem("av_orders")||"[]");
-let cancellations=JSON.parse(localStorage.getItem("av_cancellations")||"{}");
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 
-const $=id=>document.getElementById(id);
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ signOut,
+ onAuthStateChanged,
+ RecaptchaVerifier,
+ signInWithPhoneNumber
+} from
+"https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
-function save(){
-localStorage.setItem("av_products",JSON.stringify(products));
-localStorage.setItem("av_cart",JSON.stringify(cart));
-localStorage.setItem("av_orders",JSON.stringify(orders));
-localStorage.setItem("av_cancellations",JSON.stringify(cancellations));
-}
+import {
+ getFirestore,
+ doc,
+ setDoc,
+ getDoc,
+ collection,
+ addDoc,
+ getDocs,
+ query,
+ where,
+ serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-function show(id){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-$(id).classList.add("active");
-renderAll();
-}
+import {
+ getStorage,
+ ref,
+ uploadBytes,
+ getDownloadURL
+} from
+"https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
-function render(cat){
-let q=$(cat+"Search").value.toLowerCase();
-let list=products.filter(p=>p.cat===cat&&p.name.toLowerCase().includes(q));
-$(cat+"List").innerHTML=list.map(p=>`
-<div class="card product">
-<img src="${p.img||'https://placehold.co/300x180'}" alt="${p.name}">
-<h3>${p.name}</h3>
-<p class="price">₹${p.price}</p>
-<button onclick="addCart(${p.id})">Add to Cart</button>
-</div>`).join("")||"No products found";
-}
+// FIREBASE CONFIGURATION
 
-function addCart(id){
-let p=products.find(x=>x.id===id);
-let item=cart.find(x=>x.id===id);
-if(item)item.qty++;
-else cart.push({...p,qty:1});
-save();
-renderAll();
-alert("Product added to cart!");
-}
-
-function changeQty(id,n){
-let item=cart.find(x=>x.id===id);
-if(item)item.qty+=n;
-cart=cart.filter(x=>x.qty>0);
-save();
-renderAll();
-}
-
-function renderCart(){
-let total=cart.reduce((s,p)=>s+p.price*p.qty,0);
-$("count").textContent=cart.reduce((s,p)=>s+p.qty,0);
-$("total").textContent=total;
-
-$("cartItems").innerHTML=cart.map(p=>`
-<div class="item">
-<div><b>${p.name}</b><br>₹${p.price} × ${p.qty}</div>
-<button onclick="changeQty(${p.id},-1)">−</button>
-<button onclick="changeQty(${p.id},1)">+</button>
-</div>`).join("")||"Your cart is empty";
-
-let phone=$("phone").value.trim();
-let cancelCount=cancellations[phone]||0;
-
-$("advanceInfo").innerHTML=cancelCount>=5?
-`<p class="badge">आपकी 5 cancellations पूरी हो चुकी हैं। 50% Online Advance अनिवार्य है।</p>
-<p>Online Advance: ₹${Math.ceil(total/2)}</p>
-<p>COD Balance: ₹${Math.floor(total/2)}</p>`:
-`<p>Cancellation: ${cancelCount}/5</p>`;
-}
-
-function renderOrders(){
-let phone=$("historyPhone").value.trim();
-if(!/^[0-9]{10}$/.test(phone)){
-$("orderList").innerHTML="Please enter your registered mobile number.";
-return;
-}
-let list=orders.filter(o=>o.phone===phone);
-$("orderList").innerHTML=list.map(o=>`
-<div class="card">
-<b>Order #${o.id}</b>
-<p>₹${o.total}</p>
-<p>Payment: ${o.payment}</p>
-<p>Status: ${o.status}</p>
-<p>${o.cancelled?"Cancelled":"Active"}</p>
-${!o.cancelled&&o.status==="Pending"?
-`<button class="red" onclick="cancelOrder('${o.id}')">Cancel Order</button>`:""}
-</div>`).join("")||"No orders found.";
-}
-
-function checkout(){
-let total=cart.reduce((s,p)=>s+p.price*p.qty,0);
-let name=$("name").value.trim();
-let phone=$("phone").value.trim();
-let address=$("address").value.trim();
-let payment=$("payment").value;
-let count=cancellations[phone]||0;
-
-if(!cart.length)return alert("Cart is empty!");
-if(total<200)return alert("Minimum order ₹200 required!");
-if(!name||!/^[0-9]{10}$/.test(phone)||!address)
-return alert("Please enter valid delivery details!");
-
-let advance=count>=5?Math.ceil(total/2):0;
-
-if(advance>0){
-if(payment==="COD")return alert("50% online advance payment compulsory!");
-let paid=prompt("DEMO: Enter online advance amount ₹"+advance);
-if(Number(paid)!==advance)return alert("Advance amount incorrect!");
-}else if(payment!=="COD"){
-let ok=confirm("DEMO PAYMENT ONLY: Have you completed the online payment?");
-if(!ok)return;
-}
-
-let order={
-id:Date.now().toString(),
-name,phone,address,total,
-items:cart.map(p=>({...p})),
-payment,
-advance,
-status:"Pending",
-cancelled:false,
-date:new Date().toLocaleString()
+const firebaseConfig = {
+ apiKey:"AIzaSyDIjMBavODhvyJXRnP_Au564c2gzlefKuQ",
+ authDomain:"apnivibe-fe4a0.firebaseapp.com",
+ projectId:"apnivibe-fe4a0",
+ storageBucket:"apnivibe-fe4a0.firebasestorage.app",
+ messagingSenderId:"961537931228",
+ appId:"1:961537931228:web:4bdeae29e55be890508119"
 };
 
-orders.unshift(order);
-cart=[];
-save();
-renderAll();
-alert("Order placed successfully! Order ID: "+order.id);
-show("orders");
-$("historyPhone").value=phone;
-renderOrders();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+window.apniVibeStorage = storage;
+
+// PRODUCTS
+
+const products = [
+ {id:"f1",name:"Cheese Pizza",price:249,category:"food",
+  image:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500"},
+ {id:"f2",name:"Veg Burger",price:129,category:"food",
+  image:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"},
+ {id:"f3",name:"Pasta",price:179,category:"food",
+  image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500"},
+ {id:"f4",name:"Sandwich",price:99,category:"food",
+  image:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500"},
+ {id:"g1",name:"Fresh Apples 1kg",price:150,category:"grocery",
+  image:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"},
+ {id:"g2",name:"Fresh Milk 1L",price:65,category:"grocery",
+  image:"https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500"},
+ {id:"g3",name:"Tomatoes 1kg",price:40,category:"grocery",
+  image:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500"},
+ {id:"g4",name:"Banana 1 Dozen",price:60,category:"grocery",
+  image:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500"}
+];
+
+let cart = {};
+let confirmation = null;
+let currentUser = null;
+let currentRole = "customer";
+
+function renderProducts(category,elementId){
+ const element=document.getElementById(elementId);
+ element.innerHTML="";
+
+ products.filter(p=>p.category===category).forEach(p=>{
+  element.innerHTML+=`
+   <div class="product">
+    <img src="${p.image}" alt="${p.name}" loading="lazy">
+    <div class="product-info">
+     <h3>${p.name}</h3>
+     <p class="price">₹${p.price}</p>
+     <button onclick="addCart('${p.id}')">Add to Cart +</button>
+    </div>
+   </div>`;
+ });
 }
 
-function cancelOrder(id){
-let order=orders.find(o=>o.id===id);
-if(!order||order.cancelled)return;
-if(!confirm("Are you sure you want to cancel?"))return;
+renderProducts("food","foodProducts");
+renderProducts("grocery","groceryProducts");
 
-order.cancelled=true;
-order.status="Cancelled";
-cancellations[order.phone]=(cancellations[order.phone]||0)+1;
+// CART
 
-save();
-renderAll();
-alert("Order cancelled. Total cancellations: "+cancellations[order.phone]+"/5");
-renderOrders();
+window.addCart=function(id){
+ cart[id]=(cart[id]||0)+1;
+ renderCart();
+};
+
+window.removeCart=function(id){
+ delete cart[id];
+ renderCart();
+};
+
+function renderCart(){
+ let html="";
+ let total=0;
+ let count=0;
+
+ Object.entries(cart).forEach(([id,qty])=>{
+  const p=products.find(x=>x.id===id);
+  if(!p)return;
+  total+=p.price*qty;
+  count+=qty;
+  html+=`
+   <div class="cart-item">
+    <div>${p.name}<br>₹${p.price} × ${qty}</div>
+    <div>
+     <button onclick="changeQty('${id}',-1)">−</button>
+     <button onclick="changeQty('${id}',1)">+</button>
+     <button onclick="removeCart('${id}')" style="background:#dc2626">×</button>
+    </div>
+   </div>`;
+ });
+
+ document.getElementById("cartItems").innerHTML=
+ html||"आपका Cart खाली है।";
+
+ document.getElementById("total").textContent=total;
+ document.getElementById("cartCount").textContent=count;
 }
 
-function addProduct(){
-let name=$("pname").value.trim();
-let price=Number($("pprice").value);
-let img=$("pimage").value.trim();
-let cat=$("pcat").value;
+window.changeQty=function(id,change){
+ cart[id]=(cart[id]||0)+change;
+ if(cart[id]<=0)delete cart[id];
+ renderCart();
+};
 
-if(!name||price<=0)return alert("Enter valid product details!");
+window.showCheckout=function(){
+ if(!Object.keys(cart).length){
+  alert("पहले Cart में सामान जोड़ें।");
+  return;
+ }
+ if(!auth.currentUser){
+  alert("पहले Login करें।");
+  document.getElementById("account").scrollIntoView();
+  return;
+ }
+ document.getElementById("checkout").classList.remove("hidden");
+ document.getElementById("checkout").scrollIntoView();
+};
 
-products.push({
-id:Date.now(),
-name,price,img,cat
+// EMAIL SIGNUP
+
+window.signup=async function(){
+ try{
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+
+  if(password.length<6)throw Error("Password कम से कम 6 अक्षर का होना चाहिए।");
+
+  const result=await createUserWithEmailAndPassword(auth,email,password);
+
+  await setDoc(doc(db,"users",result.user.uid),{
+   email:email,
+   name:"",
+   role:"customer",
+   createdAt:serverTimestamp()
+  });
+
+  alert("Account बन गया!");
+ }catch(e){alert(e.message)}
+};
+
+// EMAIL LOGIN
+
+window.login=async function(){
+ try{
+  await signInWithEmailAndPassword(
+   auth,
+   document.getElementById("email").value.trim(),
+   document.getElementById("password").value
+  );
+  alert("Login Successful!");
+ }catch(e){alert(e.message)}
+};
+
+// PHONE OTP
+
+window.sendOTP=async function(){
+ try{
+  const phone=document.getElementById("mobile").value.trim();
+
+  if(!/^\+[1-9]\d{7,14}$/.test(phone)){
+   throw Error("मोबाइल नंबर +91XXXXXXXXXX के रूप में लिखें।");
+  }
+
+  if(!window.recaptchaVerifier){
+   window.recaptchaVerifier=new RecaptchaVerifier(
+    auth,"recaptcha-container",{}
+   );
+  }
+
+  confirmation=await signInWithPhoneNumber(
+   auth,phone,window.recaptchaVerifier
+  );
+
+  alert("OTP भेज दिया गया है।");
+ }catch(e){
+  alert(e.message);
+ }
+};
+
+window.verifyOTP=async function(){
+ try{
+  if(!confirmation)throw Error("पहले OTP भेजें।");
+
+  await confirmation.confirm(
+   document.getElementById("otp").value.trim()
+  );
+
+  alert("Mobile Login Successful!");
+ }catch(e){alert(e.message)}
+};
+
+// AUTH STATE
+
+onAuthStateChanged(auth,async user=>{
+ currentUser=user;
+
+ document.getElementById("loggedOut").classList.toggle("hidden",!!user);
+ document.getElementById("loggedIn").classList.toggle("hidden",!user);
+
+ if(user){
+  document.getElementById("userInfo").textContent=
+   "Logged in: "+(user.email||user.phoneNumber);
+
+  await checkRole(user);
+ }
 });
 
-save();
-$("pname").value="";
-$("pprice").value="";
-$("pimage").value="";
-renderAll();
-alert("Product added!");
+async function checkRole(user){
+ try{
+  const token=await user.getIdTokenResult(true);
+  const role=token.claims.role||"customer";
+  currentRole=role;
+
+  document.getElementById("dashboard").classList.toggle(
+   "hidden",!["admin","store","delivery"].includes(role)
+  );
+
+  document.getElementById("roleInfo").textContent=
+   "आपका सुरक्षित Role: "+role;
+
+  const content=document.getElementById("dashboardContent");
+
+  if(role==="admin"){
+   content.textContent="Admin Dashboard: Order और platform management.";
+  }else if(role==="store"){
+   content.textContent="Store Dashboard: Store orders management.";
+  }else if(role==="delivery"){
+   content.textContent="Delivery Dashboard: Assigned deliveries.";
+  }else{
+   content.textContent="";
+  }
+ }catch(e){
+  console.error(e);
+ }
 }
 
-function updateStatus(id,status){
-let o=orders.find(x=>x.id===id);
-if(!o)return;
-o.status=status;
-save();
-renderAll();
-}
+// LOGOUT
 
-function renderDashboard(){
-$("adminOrders").innerHTML=orders.map(o=>`
-<div class="card">
-<b>Order #${o.id}</b>
-<p>${o.name} | ${o.phone}</p>
-<p>₹${o.total} | ${o.payment}</p>
-<p>${o.address}</p>
-<p>Status: ${o.status}</p>
-<select onchange="updateStatus('${o.id}',this.value)">
-<option ${o.status==="Pending"?"selected":""}>Pending</option>
-<option ${o.status==="Accepted"?"selected":""}>Accepted</option>
-<option ${o.status==="Preparing"?"selected":""}>Preparing</option>
-<option ${o.status==="Out for Delivery"?"selected":""}>Out for Delivery</option>
-<option ${o.status==="Delivered"?"selected":""}>Delivered</option>
-</select>
-</div>`).join("")||"No orders yet.";
+window.logout=async function(){
+ await signOut(auth);
+ alert("Logout Successful");
+};
 
-$("storeOrders").innerHTML=orders.map(o=>`
-<div class="card">
-Order #${o.id}<br>₹${o.total}<br>${o.status}
-</div>`).join("")||"No orders.";
+// CREATE ORDER AND REAL PAYMENT
 
-$("deliveryOrders").innerHTML=orders.filter(o=>!o.cancelled).map(o=>`
-<div class="card">
-Order #${o.id}<br>
-${o.name}<br>${o.phone}<br>${o.address}<br>
-Status: ${o.status}<br>
-<button onclick="updateStatus('${o.id}','Out for Delivery')">Picked Up</button>
-<button onclick="updateStatus('${o.id}','Delivered')">Delivered</button>
-</div>`).join("")||"No delivery orders.";
+window.placeOrder=async function(){
+ try{
+  const user=auth.currentUser;
 
-$("cancelRecords").innerHTML=Object.entries(cancellations).map(([phone,count])=>`
-<div class="card">
-Customer: ${phone}<br>
-Cancellations: ${count}<br>
-${count>=5?"50% Advance Required":"Normal Checkout"}
-</div>`).join("")||"No cancellation records.";
-}
+  if(!user)throw Error("पहले Login करें।");
 
-function renderAll(){
-renderCart();
-render("food");
-render("grocery");
-renderDashboard();
-}
-renderAll();
+  if(!Object.keys(cart).length)throw Error("Cart खाली है।");
+
+  const name=document.getElementById("deliveryName").value.trim();
+  const phone=document.getElementById("deliveryPhone").value.trim();
+  const address=document.getElementById("deliveryAddress").value.trim();
+
+  if(!name||!address||!/^\d{10}$/.test(phone)){
+   throw Error("नाम, सही 10 अंकों का मोबाइल और पूरा पता भरें।");
+  }
+
+  const total=products.reduce((sum,p)=>{
+   return sum+(cart[p.id]||0)*p.price;
+  },0);
+
+  if(total<=0)throw Error("Order Amount गलत है।");
+
+  document.getElementById("checkoutMessage").textContent=
+   "Secure payment तैयार हो रहा है...";
+
+  /*
+   IMPORTANT:
+   Razorpay order server पर बनाया जाएगा।
+   Amount भी server पर product prices से calculate होगा।
+  */
+
+  const {getFunctions,httpsCallable}=
+   await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js");
+
+  const functions=getFunctions(app,"asia-south1");
+
+  const createPayment=httpsCallable(functions,"createRazorpayOrder");
+
+  const paymentResult=await createPayment({
+   items:Object.entries(cart).map(([id,qty])=>({id,qty}))
+  });
+
+  const payment=paymentResult.data;
+
+  if(!payment.orderId||!payment.keyId||!payment.amount){
+   throw Error("Payment Order Server Response गलत है।");
+  }
+
+  const options={
+   key:payment.keyId,
+   amount:payment.amount,
+   currency:payment.currency||"INR",
+   name:"ApniVibe",
+   description:"Food & Grocery Order",
+   order_id:payment.orderId,
+
+   prefill:{
+    name:name,
+    contact:phone,
+    email:user.email||""
+   },
+
+   theme:{color:"#16a34a"},
+
+   handler:async function(response){
+    try{
+     const verifyPayment=httpsCallable(
+      functions,"verifyRazorpayPayment"
+     );
+
+     const verification=await verifyPayment({
+      orderId:payment.orderId,
+      paymentId:response.razorpay_payment_id,
+      signature:response.razorpay_signature,
+      name:name,
+      phone:phone,
+      address:address
+     });
+
+     if(!verification.data.verified){
+      throw Error("Payment Verification Failed");
+     }
+
+     cart={};
+     renderCart();
+
+     document.getElementById("checkoutMessage").textContent=
+      "Payment Successful! आपका Order Confirm हो गया है।";
+
+     alert("ApniVibe: आपका भुगतान सफल रहा!");
+
+     loadOrders();
+
+    }catch(e){
+     document.getElementById("checkoutMessage").textContent=e.message;
+     alert("Payment verification error: "+e.message);
+    }
+   },
+
+   modal:{
+    ondismiss:function(){
+     document.getElementById("checkoutMessage").textContent=
+      "Payment पूरा नहीं हुआ। आप दोबारा कोशिश कर सकते हैं।";
+    }
+   }
+  };
+
+  const razorpay=new window.Razorpay(options);
+
+  razorpay.on("payment.failed",function(response){
+   alert("Payment Failed: "+response.error.description);
+  });
+
+  razorpay.open();
+
+ }catch(e){
+  document.getElementById("checkoutMessage").textContent=e.message;
+  alert("Checkout Error: "+e.message);
+ }
+};
+
+// CUSTOMER ORDER HISTORY
+
+window.loadOrders=async function(){
+ try{
+  const user=auth.currentUser;
+  if(!user)return;
+
+  const q=query(
+   collection(db,"orders"),
+   where("userId","==",user.uid)
+  );
+
+  const result=await getDocs(q);
+  const box=document.getElementById("myOrders");
+
+  box.innerHTML="<h3>My Orders</h3>";
+
+  if(result.empty){
+   box.innerHTML+="अभी कोई Order नहीं है।";
+   return;
+  }
+
+  result.forEach(d=>{
+   const order=d.data();
+
+   box.innerHTML+=`
+    <div class="panel">
+     <b>Order:</b> ${d.id}<br>
+     <b>Total:</b> ₹${order.amount||0}<br>
+     <b>Status:</b> ${order.status||"Processing"}<br>
+     <b>Payment:</b> ${order.paymentStatus||"Pending"}
+    </div>`;
+  });
+ }catch(e){
+  alert("Orders लोड नहीं हुए: "+e.message);
+ }
+};
+
 </script>
 </body>
 </html>
