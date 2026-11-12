@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="hi">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ApniVibe</title>
@@ -24,10 +25,8 @@ main{max-width:1200px;margin:auto;padding:12px}
 .price{color:#087b45;font-weight:bold;margin:7px 0}
 .add{width:100%}
 .panel{padding:12px;margin:10px 0}
-.hidden{display:none!important}
 .row{display:flex;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid #eee}
-.qty button{background:#e8f2eb;color:#087b45}
-#msg{position:fixed;bottom:12px;left:10%;width:80%;background:#222;color:white;padding:10px;border-radius:8px;display:none}
+.hidden{display:none!important}
 @media(max-width:600px){
 main{padding:6px}
 .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
@@ -38,7 +37,8 @@ main{padding:6px}
 .add{font-size:10px;padding:7px 1px}
 }
 </style>
-
+</head>
+<body>
 <header>
 <div class="top">
 <b class="logo">🛍️ ApniVibe</b>
@@ -61,16 +61,13 @@ main{padding:6px}
 <h2 id="heading">🍔 Fast Food</h2>
 <div id="products" class="grid"></div>
 </section>
-
 <section id="cartview" class="hidden">
 <h2>आपका Cart</h2>
 <div class="panel" id="cartitems"></div>
-<div class="panel">
-कुल: ₹<b id="total">0</b>
+<div class="panel">कुल: ₹<b id="total">0</b>
 <p><button class="add" onclick="checkout()">Order Place करें</button></p>
 </div>
 </section>
-
 <section id="accountview" class="hidden">
 <h2>Account (Demo)</h2>
 <div class="panel">
@@ -80,7 +77,6 @@ main{padding:6px}
 <p id="profile"></p>
 </div>
 </section>
-
 <section id="addressview" class="hidden">
 <h2>Delivery Address</h2>
 <div class="panel">
@@ -91,127 +87,68 @@ main{padding:6px}
 <button class="add" onclick="place()">Confirm Demo Order</button>
 </div>
 </section>
-
 <section id="ordersview" class="hidden">
 <h2>My Orders</h2>
 <div id="orderlist"></div>
 </section>
 </main>
-
 <div id="msg"></div>
 
 <script>
 const data=[
-['Veg Burger',60,'fast'],
-['Cheese Burger',80,'fast'],
-['Paneer Burger',90,'fast'],
-['Pizza',140,'fast'],
-['Cheese Pizza',160,'fast'],
-['French Fries',70,'fast'],
-['Veg Sandwich',60,'fast'],
-['Momos',80,'fast'],
-['Chowmein',90,'fast'],
-['Pasta',120,'fast'],
-['Chole Bhature',100,'fast'],
-['Pav Bhaji',100,'fast'],
-['Samosa',20,'fast'],
-['Kachori',25,'fast'],
-['Dhokla',50,'fast'],
-['Poha',40,'fast'],
-['Idli Sambhar',60,'fast'],
-['Masala Dosa',90,'fast'],
-['Veg Thali',120,'fast'],
-['Gulab Jamun',40,'fast'],
+['Veg Burger',60,'fast'],['Cheese Burger',80,'fast'],
+['Paneer Burger',90,'fast'],['Pizza',140,'fast'],
+['Cheese Pizza',160,'fast'],['French Fries',70,'fast'],
+['Veg Sandwich',60,'fast'],['Momos',80,'fast'],
+['Chowmein',90,'fast'],['Pasta',120,'fast'],
+['Chole Bhature',100,'fast'],['Pav Bhaji',100,'fast'],
+['Samosa',20,'fast'],['Kachori',25,'fast'],
+['Dhokla',50,'fast'],['Poha',40,'fast'],
+['Idli Sambhar',60,'fast'],['Masala Dosa',90,'fast'],
+['Veg Thali',120,'fast'],['Gulab Jamun',40,'fast'],
+['आटा 1 KG',40,'grocery'],['आटा 5 KG',190,'grocery'],
+['चावल 1 KG',60,'grocery'],['बासमती चावल',100,'grocery'],
+['तूर दाल',140,'grocery'],['मूंग दाल',120,'grocery'],
+['मसूर दाल',100,'grocery'],['चना दाल',90,'grocery'],
+['राजमा',140,'grocery'],['चीनी',45,'grocery'],
+['नमक',22,'grocery'],['सरसों तेल',160,'grocery'],
+['घी',300,'grocery'],['हल्दी पाउडर',50,'grocery'],
+['लाल मिर्च',60,'grocery'],['चाय पत्ती',100,'grocery'],
+['दूध 1 L',60,'grocery'],['दही',40,'grocery'],
+['पनीर',90,'grocery'],['ब्रेड',40,'grocery'],
+['आलू',30,'grocery'],['प्याज',35,'grocery'],
+['टमाटर',40,'grocery'],['भिंडी',30,'grocery'],
+['पालक',20,'grocery'],['सेब',150,'grocery'],
+['केला',60,'grocery'],['संतरा',80,'grocery'],
+['बिस्कुट',20,'grocery'],['नूडल्स',15,'grocery']
+].map((x,i)=>({id:i+1,name:x[0],price:x[1],type:x[2]}));
 
-['आटा 1 KG',40,'grocery'],
-['आटा 5 KG',190,'grocery'],
-['चावल 1 KG',60,'grocery'],
-['बासमती चावल',100,'grocery'],
-['तूर दाल',140,'grocery'],
-['मूंग दाल',120,'grocery'],
-['मसूर दाल',100,'grocery'],
-['चना दाल',90,'grocery'],
-['राजमा',140,'grocery'],
-['चीनी',45,'grocery'],
-['नमक',22,'grocery'],
-['सरसों तेल',160,'grocery'],
-['घी',300,'grocery'],
-['हल्दी पाउडर',50,'grocery'],
-['लाल मिर्च',60,'grocery'],
-['चाय पत्ती',100,'grocery'],
-['दूध 1 L',60,'grocery'],
-['दही',40,'grocery'],
-['पनीर',90,'grocery'],
-['ब्रेड',40,'grocery'],
-['आलू',30,'grocery'],
-['प्याज',35,'grocery'],
-['टमाटर',40,'grocery'],
-['भिंडी',30,'grocery'],
-['पालक',20,'grocery'],
-['सेब',150,'grocery'],
-['केला',60,'grocery'],
-['संतरा',80,'grocery'],
-['बिस्कुट',20,'grocery'],
-['नूडल्स',15,'grocery']
-].map((x,i)=>({
-id:i+1,
-name:x[0],
-price:x[1],
-type:x[2]
-}));
-
-// हर सामान के लिए अलग फोटो keyword
 const photoKeywords={
-'Veg Burger':'veg burger',
-'Cheese Burger':'cheese burger',
-'Paneer Burger':'paneer burger',
-'Pizza':'vegetable pizza',
-'Cheese Pizza':'cheese pizza',
-'French Fries':'french fries',
-'Veg Sandwich':'vegetable sandwich',
-'Momos':'steamed momos',
-'Chowmein':'vegetable chow mein',
-'Pasta':'pasta dish',
-'Chole Bhature':'chole bhature',
-'Pav Bhaji':'pav bhaji',
-'Samosa':'samosa indian snack',
-'Kachori':'kachori indian snack',
-'Dhokla':'dhokla',
-'Poha':'poha indian breakfast',
-'Idli Sambhar':'idli sambar',
-'Masala Dosa':'masala dosa',
-'Veg Thali':'indian veg thali',
-'Gulab Jamun':'gulab jamun',
-'आटा 1 KG':'wheat flour atta packet',
-'आटा 5 KG':'wheat flour atta bag',
-'चावल 1 KG':'rice grains bowl',
-'बासमती चावल':'basmati rice grains',
-'तूर दाल':'toor dal lentils',
-'मूंग दाल':'moong dal lentils',
-'मसूर दाल':'masoor dal lentils',
-'चना दाल':'chana dal lentils',
-'राजमा':'kidney beans rajma',
-'चीनी':'white sugar bowl',
-'नमक':'salt bowl',
-'सरसों तेल':'mustard oil bottle',
-'घी':'ghee jar',
-'हल्दी पाउडर':'turmeric powder bowl',
-'लाल मिर्च':'red chilli powder bowl',
-'चाय पत्ती':'black tea leaves',
-'दूध 1 L':'milk bottle',
-'दही':'plain yogurt curd bowl',
-'पनीर':'paneer cubes',
-'ब्रेड':'bread loaf',
-'आलू':'potato potatoes',
-'प्याज':'onion onions',
-'टमाटर':'tomatoes',
-'भिंडी':'okra ladyfinger vegetable',
-'पालक':'fresh spinach leaves',
-'सेब':'red apples',
-'केला':'yellow bananas',
-'संतरा':'oranges',
-'बिस्कुट':'biscuits cookies packet',
-'नूडल्स':'instant noodles packet'
+'Veg Burger':'veg burger','Cheese Burger':'cheese burger',
+'Paneer Burger':'paneer burger','Pizza':'vegetable pizza',
+'Cheese Pizza':'cheese pizza','French Fries':'french fries',
+'Veg Sandwich':'vegetable sandwich','Momos':'steamed momos',
+'Chowmein':'vegetable chow mein','Pasta':'pasta dish',
+'Chole Bhature':'chole bhature','Pav Bhaji':'pav bhaji',
+'Samosa':'samosa indian snack','Kachori':'kachori indian snack',
+'Dhokla':'dhokla','Poha':'poha indian breakfast',
+'Idli Sambhar':'idli sambar','Masala Dosa':'masala dosa',
+'Veg Thali':'indian veg thali','Gulab Jamun':'gulab jamun',
+'आटा 1 KG':'wheat flour atta packet','आटा 5 KG':'wheat flour atta bag',
+'चावल 1 KG':'rice grains bowl','बासमती चावल':'basmati rice grains',
+'तूर दाल':'toor dal lentils','मूंग दाल':'moong dal lentils',
+'मसूर दाल':'masoor dal lentils','चना दाल':'chana dal lentils',
+'राजमा':'kidney beans rajma','चीनी':'white sugar bowl',
+'नमक':'salt bowl','सरसों तेल':'mustard oil bottle',
+'घी':'ghee jar','हल्दी पाउडर':'turmeric powder bowl',
+'लाल मिर्च':'red chilli powder bowl','चाय पत्ती':'black tea leaves',
+'दूध 1 L':'milk bottle','दही':'plain yogurt curd bowl',
+'पनीर':'paneer cubes','ब्रेड':'bread loaf',
+'आलू':'potato potatoes','प्याज':'onion onions',
+'टमाटर':'tomatoes','भिंडी':'okra ladyfinger vegetable',
+'पालक':'fresh spinach leaves','सेब':'red apples',
+'केला':'yellow bananas','संतरा':'oranges',
+'बिस्कुट':'biscuits cookies packet','नूडल्स':'instant noodles packet'
 };
 
 function photoUrl(p){
@@ -221,165 +158,108 @@ return `https://loremflickr.com/480/360/${encodeURIComponent(term)}?lock=${p.id}
 
 let page='fast';
 let cart=JSON.parse(localStorage.apni_cart||'{}');
-let profile=JSON.parse(localStorage.apni_profile||'null');
+let profileData=JSON.parse(localStorage.apni_profile||'null');
 let orders=JSON.parse(localStorage.apni_orders||'[]');
 
 function save(){
 localStorage.apni_cart=JSON.stringify(cart);
-localStorage.apni_profile=JSON.stringify(profile);
+localStorage.apni_profile=JSON.stringify(profileData);
 localStorage.apni_orders=JSON.stringify(orders);
 document.getElementById('count').textContent=
 Object.values(cart).reduce((a,b)=>a+b,0);
 }
-
 function msg(t){
 let e=document.getElementById('msg');
-e.textContent=t;
-e.style.display='block';
+e.textContent=t;e.style.display='block';
 setTimeout(()=>e.style.display='none',2000);
 }
-
 function hide(){
 ['catalog','cartview','accountview','addressview','ordersview']
 .forEach(x=>document.getElementById(x).classList.add('hidden'));
 }
-
 function setPage(p){
-page=p;
-hide();
-catalog.classList.remove('hidden');
-fast.classList.toggle('active',p==='fast');
-grocery.classList.toggle('active',p==='grocery');
-heading.textContent=p==='fast'?'🍔 Fast Food':'🛒 Grocery';
+page=p;hide();
+document.getElementById('catalog').classList.remove('hidden');
+document.getElementById('fast').classList.toggle('active',p==='fast');
+document.getElementById('grocery').classList.toggle('active',p==='grocery');
+document.getElementById('heading').textContent=p==='fast'?'🍔 Fast Food':'🛒 Grocery';
 render();
 }
-
 function render(){
-let q=search.value.toLowerCase();
+let q=document.getElementById('search').value.toLowerCase();
 let a=data.filter(p=>p.type===page&&p.name.toLowerCase().includes(q));
-
-products.innerHTML=a.map(p=>`
+document.getElementById('products').innerHTML=a.map(p=>`
 <article class="card">
 <img src="${photoUrl(p)}" alt="${p.name}" loading="lazy"
 onerror="this.onerror=null;this.src='https://placehold.co/480x360/f2f2f2/555?text='+encodeURIComponent(p.name)">
 <div class="cardbody">
-<h3>${p.name}</h3>
-<div class="price">₹${p.price}</div>
+<h3>${p.name}</h3><div class="price">₹${p.price}</div>
 <button class="add" onclick="add(${p.id})">Add to Cart</button>
-</div>
-</article>
-`).join('')||'कोई सामान नहीं मिला';
+</div></article>`).join('')||'कोई सामान नहीं मिला';
 }
-
-function add(id){
-cart[id]=(cart[id]||0)+1;
-save();
-msg('Cart में जोड़ दिया');
-}
-
+function add(id){cart[id]=(cart[id]||0)+1;save();msg('Cart में जोड़ दिया');}
 function cartPage(){
-hide();
-cartview.classList.remove('hidden');
+hide();document.getElementById('cartview').classList.remove('hidden');
 let sum=0;
-cartitems.innerHTML=data.filter(p=>cart[p.id]).map(p=>{
+document.getElementById('cartitems').innerHTML=data.filter(p=>cart[p.id]).map(p=>{
 sum+=p.price*cart[p.id];
 return `<div class="row">${p.name} × ${cart[p.id]}
-<span>
-<button onclick="qty(${p.id},-1)">−</button>
-<button onclick="qty(${p.id},1)">+</button>
-</span>
-</div>`;
+<span><button onclick="qty(${p.id},-1)">−</button>
+<button onclick="qty(${p.id},1)">+</button></span></div>`;
 }).join('')||'Cart खाली है';
-total.textContent=sum;
+document.getElementById('total').textContent=sum;
 }
-
 function qty(id,n){
 cart[id]=(cart[id]||0)+n;
 if(cart[id]<=0)delete cart[id];
-save();
-cartPage();
+save();cartPage();
 }
-
 function account(){
-hide();
-accountview.classList.remove('hidden');
-profile.textContent=localStorage.apni_profile?
-`Saved profile: ${JSON.parse(localStorage.apni_profile).name}`:'';
+hide();document.getElementById('accountview').classList.remove('hidden');
+document.getElementById('profile').textContent=profileData?
+'Saved profile: '+profileData.name:'';
 }
-
 function login(){
-if(!nm.value.trim()||!ph.value.trim())
-return msg('नाम और मोबाइल भरें');
-
-profile={name:nm.value,phone:ph.value};
-localStorage.apni_profile=JSON.stringify(profile);
-msg('Demo profile save हुई');
+let name=document.getElementById('nm').value;
+let phone=document.getElementById('ph').value;
+if(!name.trim()||!phone.trim())return msg('नाम और मोबाइल भरें');
+profileData={name,phone};save();msg('Demo profile save हुई');
 }
-
 function checkout(){
-if(!Object.keys(cart).length)
-return msg('Cart खाली है');
-
-if(!profile){
-account();
-return msg('पहले demo profile बनाएं');
+if(!Object.keys(cart).length)return msg('Cart खाली है');
+if(!profileData){account();return msg('पहले demo profile बनाएं');}
+hide();document.getElementById('addressview').classList.remove('hidden');
+document.getElementById('addrname').value=profileData.name;
+document.getElementById('addrphone').value=profileData.phone;
 }
-
-hide();
-addressview.classList.remove('hidden');
-addrname.value=profile.name;
-addrphone.value=profile.phone;
-}
-
 function gps(){
-if(!navigator.geolocation)
-return msg('GPS उपलब्ध नहीं');
-
+if(!navigator.geolocation)return msg('GPS उपलब्ध नहीं');
 navigator.geolocation.getCurrentPosition(p=>{
-addr.value+=` GPS: ${p.coords.latitude}, ${p.coords.longitude}`;
+document.getElementById('addr').value+=
+` GPS: ${p.coords.latitude}, ${p.coords.longitude}`;
 },()=>msg('Location permission दें या पता लिखें'));
 }
-
 function place(){
-if(!addrname.value||!addrphone.value||!addr.value)
-return msg('पूरा पता भरें');
-
+let name=document.getElementById('addrname').value;
+let phone=document.getElementById('addrphone').value;
+let address=document.getElementById('addr').value;
+if(!name||!phone||!address)return msg('पूरा पता भरें');
 let items=data.filter(p=>cart[p.id]).map(p=>({
-name:p.name,
-qty:cart[p.id],
-price:p.price
+name:p.name,qty:cart[p.id],price:p.price
 }));
-
 let sum=items.reduce((s,p)=>s+p.qty*p.price,0);
-
-orders.unshift({
-date:new Date().toLocaleString('hi-IN'),
-items,
-total:sum,
-address:addr.value
-});
-
-cart={};
-save();
-ordersPage();
-msg('Demo order save हुआ');
+orders.unshift({date:new Date().toLocaleString('hi-IN'),items,total:sum,address});
+cart={};save();ordersPage();msg('Demo order save हुआ');
 }
-
 function ordersPage(){
-hide();
-ordersview.classList.remove('hidden');
-
-orderlist.innerHTML=orders.map(o=>`
-<div class="panel">
-${o.date}
+hide();document.getElementById('ordersview').classList.remove('hidden');
+document.getElementById('orderlist').innerHTML=orders.map(o=>`
+<div class="panel"><b>${o.date}</b>
 <p>${o.items.map(x=>x.name+' × '+x.qty).join('<br>')}</p>
-<b>₹${o.total}</b>
-<p>${o.address}</p>
-</div>
-`).join('')||'अभी कोई order नहीं';
+<b>₹${o.total}</b><p>${o.address}</p></div>`
+).join('')||'अभी कोई order नहीं';
 }
-
-save();
-render();
+save();render();
 </script>
+</body>
 </html>
