@@ -1,682 +1,274 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
-<title>ApniVibe | Food & Grocery Delivery</title>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ApniVibe | Food & Grocery</title>
 <style>
-:root {
-  --dark:#111827;
-  --green:#16a34a;
-  --orange:#f97316;
-  --light:#f8fafc;
-  --white:#ffffff;
-}
+:root{--purple:#6417c8;--green:#16864d;--orange:#ff941c;--ink:#211b32;--muted:#716b7d;--bg:#f7f5fc;--line:#e7e0f2}
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:var(--light);
- color:var(--dark);
-}
-header{
- background:#111827;
- color:white;
- padding:17px 5%;
- display:flex;
- justify-content:space-between;
- align-items:center;
- position:sticky;
- top:0;
- z-index:10;
-}
-.logo{font-size:25px;font-weight:bold;color:#4ade80}
-nav{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
-nav a{color:white;text-decoration:none;font-size:14px}
-button{
- border:0;
- padding:11px 17px;
- border-radius:9px;
- background:var(--green);
- color:white;
- font-weight:bold;
- cursor:pointer;
-}
-button:hover{opacity:.85}
-.hero{
- padding:65px 7%;
- background:linear-gradient(120deg,#064e3b,#16a34a);
- color:white;
-}
-.hero h1{font-size:42px;margin:0 0 15px}
-.hero p{font-size:18px}
-.hero button{background:#f97316;margin-top:12px}
-.container{padding:30px 5%}
-.section-title{font-size:25px;margin-bottom:20px}
-.categories{
- display:flex;
- gap:12px;
- flex-wrap:wrap;
- margin-bottom:25px;
-}
-.categories button{background:#e5e7eb;color:#111827}
-.categories button.active{background:#16a34a;color:white}
-.products{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
- gap:18px;
-}
-.product{
- background:white;
- border-radius:15px;
- overflow:hidden;
- box-shadow:0 3px 14px #00000012;
-}
-.product img{
- width:100%;
- height:145px;
- object-fit:cover;
- background:#eee;
-}
-.product-info{padding:14px}
-.product h3{margin:5px 0}
-.price{font-size:19px;color:#16a34a;font-weight:bold}
-.product button{width:100%;margin-top:10px}
-.panel{
- background:white;
- border-radius:14px;
- padding:20px;
- margin:20px 0;
- box-shadow:0 3px 15px #00000010;
-}
-input,select,textarea{
- width:100%;
- padding:12px;
- margin:7px 0 13px;
- border:1px solid #d1d5db;
- border-radius:8px;
- font-size:15px;
-}
-.cart-item{
- display:flex;
- justify-content:space-between;
- gap:10px;
- padding:12px 0;
- border-bottom:1px solid #eee;
-}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.wrap{max-width:1180px;margin:auto;padding:14px 18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:900;color:var(--purple)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:10px 13px;background:var(--purple);color:#fff;font-weight:700;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.light{background:#f0e9fb;color:var(--purple);border:1px solid #e3d5f8}
+.green{background:var(--green)}.orange{background:var(--orange)}
+.hero{margin:18px 0;padding:25px;border-radius:18px;background:linear-gradient(115deg,#4f0db3,#873be5);color:white}
+.hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,38px)}
+.hero p{margin:0 0 16px;color:#f1e9ff}
+.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px}
+.quick{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.quick button{flex:1;min-width:130px;padding:14px}
+.section{margin:22px 0}.section h2{margin:0 0 12px;font-size:22px}
+.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}
+.filters button{white-space:nowrap;border-radius:99px;padding:8px 14px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;min-width:0}
+.pic{height:94px;background:#f4effb;border-radius:10px;display:grid;place-items:center;font-size:48px}
+.card h3{font-size:15px;margin:8px 0 3px}
+.desc{font-size:12px;color:var(--muted);min-height:15px}
+.price{font-weight:800;margin:6px 0}
+.controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.qty{display:flex;align-items:center;border:1px solid #dfd2f3;border-radius:9px;overflow:hidden}
+.qty button{border-radius:0;padding:6px 10px;background:#f1eafa;color:var(--purple)}
+.qty span{min-width:24px;text-align:center;font-weight:700}
+.add{padding:7px 10px;font-size:12px}
+.cart{position:sticky;top:88px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}
+.cartrow{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:9px 0;font-size:13px}
+.total{display:flex;justify-content:space-between;font-weight:900;font-size:19px;padding:12px 0}
+.note{font-size:12px;color:var(--muted)}
+.suggest{background:#fff8e9;border:1px solid #f5dfb0;border-radius:15px;padding:14px;margin-top:16px}
+.suggest h3{margin:0 0 5px}
+.suggestgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
+.mini{background:#fff;border:1px solid #f0dfbd;border-radius:11px;padding:9px;display:flex;align-items:center;gap:8px;min-width:0}
+.mini .em{font-size:28px}.mini b{font-size:12px}
+.mini small{display:block;color:var(--muted);margin:3px 0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0}
+input,textarea,select{width:100%;padding:11px;border:1px solid #ddd4e9;border-radius:10px;margin:5px 0 12px;font:inherit}
+label{font-size:13px;font-weight:700}
 .hidden{display:none!important}
-.total{font-size:23px;font-weight:bold;color:#15803d}
-footer{
- background:#111827;
- color:white;
- padding:30px;
- text-align:center;
- margin-top:40px;
-}
-#message{padding:12px;color:#166534}
-@media(max-width:600px){
- header{padding:13px;flex-wrap:wrap;gap:12px}
- nav{gap:10px}
- .hero h1{font-size:31px}
- .hero{padding:45px 6%}
- .container{padding:22px 4%}
-}
+.order{padding:13px;border:1px solid var(--line);border-radius:12px;margin:10px 0;background:#fff}
+.pill{background:#eee5fb;color:var(--purple);padding:4px 8px;border-radius:99px;font-size:12px}
+footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.cart{position:static;order:2}.products{gap:8px}.wrap{padding:12px}}
+@media(max-width:380px){.pic{height:78px}.card{padding:8px}.card h3{font-size:13px}.controls{gap:3px}.qty button{padding:5px 8px}}
 </style>
 </head>
-
 <body>
+<header><div class="wrap top">
+  <div class="logo">🛍️ ApniVibe</div>
+  <nav>
+    <button class="light" onclick="showPage('home')">Home</button>
+    <button class="light" onclick="openCategory('Food')">Food</button>
+    <button class="light" onclick="openCategory('Grocery')">Grocery</button>
+    <button class="light" onclick="showPage('orders')">My Orders</button>
+    <button onclick="showPage('admin')">Admin Demo</button>
+  </nav>
+</div></header>
 
-<header>
- <div class="logo">ApniVibe</div>
- <nav>
-  <a href="#home">Home</a>
-  <a href="#food">Food</a>
-  <a href="#grocery">Grocery</a>
-  <a href="#cart">Cart 🛒 <span id="cartCount">0</span></a>
-  <a href="#account">Account</a>
- </nav>
-</header>
-
-<section class="hero" id="home">
- <h1>ApniVibe में आपका स्वागत है!</h1>
- <p>आपका पसंदीदा खाना और रोज़मर्रा का सामान, अब आपके दरवाज़े पर।</p>
- <button onclick="document.getElementById('food').scrollIntoView()">Order Now</button>
+<main class="wrap">
+<section id="homePage">
+  <div class="hero">
+    <h1>ApniVibe — Food & Grocery Delivery</h1>
+    <p>Ghar baithe sab kuch payein! पसंदीदा सामान चुनें और सीधे Cart में जोड़ें।</p>
+    <input class="search" id="homeSearch" placeholder="🔎 Food या Grocery खोजें..." oninput="globalSearch(this.value)">
+  </div>
+  <div class="quick">
+    <button class="orange" onclick="openCategory('Food')">🍕 Food Order Now</button>
+    <button class="green" onclick="openCategory('Grocery')">🥦 Grocery Order Now</button>
+  </div>
+  <section class="section"><h2>Popular Categories</h2><div class="filters">
+    <button class="light" onclick="openCategory('Food','Pizza')">🍕 Pizza</button>
+    <button class="light" onclick="openCategory('Food','Burger')">🍔 Burger</button>
+    <button class="light" onclick="openCategory('Food','Cake')">🎂 Cake</button>
+    <button class="light" onclick="openCategory('Food','Drinks')">🥤 Drinks</button>
+    <button class="light" onclick="openCategory('Grocery','Fruits')">🍎 Fruits</button>
+    <button class="light" onclick="openCategory('Grocery','Vegetables')">🥦 Vegetables</button>
+  </div></section>
 </section>
 
-<main class="container">
-
-<section id="food">
- <h2 class="section-title">🍕 Delicious Food</h2>
- <div class="products" id="foodProducts"></div>
-</section>
-
-<section id="grocery" style="margin-top:40px">
- <h2 class="section-title">🥦 Fresh Grocery</h2>
- <div class="products" id="groceryProducts"></div>
-</section>
-
-<section id="cart" class="panel">
- <h2>🛒 आपका Shopping Cart</h2>
- <div id="cartItems">आपका Cart खाली है।</div>
- <p class="total">Total: ₹<span id="total">0</span></p>
- <button onclick="showCheckout()">Proceed to Checkout</button>
-</section>
-
-<section id="checkout" class="panel hidden">
- <h2>📍 Delivery Details</h2>
- <label>पूरा नाम</label>
- <input id="deliveryName" placeholder="अपना नाम">
-
- <label>मोबाइल नंबर</label>
- <input id="deliveryPhone" placeholder="10 अंकों का मोबाइल नंबर">
-
- <label>Delivery Address</label>
- <textarea id="deliveryAddress" placeholder="मकान नंबर, गली, शहर, पिन कोड"></textarea>
-
- <label>Payment Method</label>
- <select id="paymentMethod">
-  <option value="razorpay">Online Payment (Razorpay)</option>
- </select>
-
- <button onclick="placeOrder()">Pay & Place Order</button>
- <p id="checkoutMessage"></p>
-</section>
-
-<section id="account" class="panel">
- <h2>👤 My Account</h2>
- <div id="loggedOut">
-  <h3>Email Login / Signup</h3>
-  <input id="email" type="email" placeholder="Gmail / Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Create Account</button>
-  <button onclick="login()" style="background:#2563eb">Login</button>
-
-  <hr>
-  <h3>Mobile OTP Login</h3>
-  <input id="mobile" type="tel" placeholder="+91XXXXXXXXXX">
-  <div id="recaptcha-container"></div>
-  <button onclick="sendOTP()">Send OTP</button>
-  <input id="otp" placeholder="Enter OTP">
-  <button onclick="verifyOTP()">Verify OTP</button>
- </div>
-
- <div id="loggedIn" class="hidden">
-  <p id="userInfo"></p>
-  <button onclick="loadOrders()">My Orders</button>
-  <button onclick="logout()" style="background:#dc2626">Logout</button>
-  <div id="myOrders"></div>
- </div>
- <p id="message"></p>
-</section>
-
-<section id="dashboard" class="panel hidden">
- <h2>🔐 Authorized Dashboard</h2>
- <p id="roleInfo"></p>
- <div id="dashboardContent"></div>
-</section>
-
-</main>
-
-<footer>
- <h2>ApniVibe</h2>
- <p>Food & Grocery Delivery Platform</p>
- <p>Fresh Food | Fresh Grocery | Fast Delivery</p>
- <p>© 2026 ApniVibe. All Rights Reserved.</p>
-</footer>
-
-<script type="module">
-
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-
-import {
- getAuth,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- signOut,
- onAuthStateChanged,
- RecaptchaVerifier,
- signInWithPhoneNumber
-} from
-"https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-import {
- getFirestore,
- doc,
- setDoc,
- getDoc,
- collection,
- addDoc,
- getDocs,
- query,
- where,
- serverTimestamp
-} from
-"https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-
-import {
- getStorage,
- ref,
- uploadBytes,
- getDownloadURL
-} from
-"https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
-
-// FIREBASE CONFIGURATION
-
-const firebaseConfig = {
- apiKey:"AIzaSyDIjMBavODhvyJXRnP_Au564c2gzlefKuQ",
- authDomain:"apnivibe-fe4a0.firebaseapp.com",
- projectId:"apnivibe-fe4a0",
- storageBucket:"apnivibe-fe4a0.firebasestorage.app",
- messagingSenderId:"961537931228",
- appId:"1:961537931228:web:4bdeae29e55be890508119"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-window.apniVibeStorage = storage;
-
-// PRODUCTS
-
-const products = [
- {id:"f1",name:"Cheese Pizza",price:249,category:"food",
-  image:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500"},
- {id:"f2",name:"Veg Burger",price:129,category:"food",
-  image:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"},
- {id:"f3",name:"Pasta",price:179,category:"food",
-  image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500"},
- {id:"f4",name:"Sandwich",price:99,category:"food",
-  image:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500"},
- {id:"g1",name:"Fresh Apples 1kg",price:150,category:"grocery",
-  image:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"},
- {id:"g2",name:"Fresh Milk 1L",price:65,category:"grocery",
-  image:"https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500"},
- {id:"g3",name:"Tomatoes 1kg",price:40,category:"grocery",
-  image:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500"},
- {id:"g4",name:"Banana 1 Dozen",price:60,category:"grocery",
-  image:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500"}
-];
-
-let cart = {};
-let confirmation = null;
-let currentUser = null;
-let currentRole = "customer";
-
-function renderProducts(category,elementId){
- const element=document.getElementById(elementId);
- element.innerHTML="";
-
- products.filter(p=>p.category===category).forEach(p=>{
-  element.innerHTML+=`
-   <div class="product">
-    <img src="${p.image}" alt="${p.name}" loading="lazy">
-    <div class="product-info">
-     <h3>${p.name}</h3>
-     <p class="price">₹${p.price}</p>
-     <button onclick="addCart('${p.id}')">Add to Cart +</button>
-    </div>
-   </div>`;
- });
-}
-
-renderProducts("food","foodProducts");
-renderProducts("grocery","groceryProducts");
-
-// CART
-
-window.addCart=function(id){
- cart[id]=(cart[id]||0)+1;
- renderCart();
-};
-
-window.removeCart=function(id){
- delete cart[id];
- renderCart();
-};
-
-function renderCart(){
- let html="";
- let total=0;
- let count=0;
-
- Object.entries(cart).forEach(([id,qty])=>{
-  const p=products.find(x=>x.id===id);
-  if(!p)return;
-  total+=p.price*qty;
-  count+=qty;
-  html+=`
-   <div class="cart-item">
-    <div>${p.name}<br>₹${p.price} × ${qty}</div>
+<section id="shopPage" class="hidden">
+  <div class="section">
+    <h2 id="shopTitle">Food Menu</h2>
+    <input class="search" id="shopSearch" placeholder="🔎 नाम से खोजें..." oninput="renderProducts()">
+    <div class="filters" id="categoryFilters"></div>
+  </div>
+  <div class="layout">
     <div>
-     <button onclick="changeQty('${id}',-1)">−</button>
-     <button onclick="changeQty('${id}',1)">+</button>
-     <button onclick="removeCart('${id}')" style="background:#dc2626">×</button>
+      <div id="products" class="products"></div>
+      <div id="suggestions" class="suggest hidden"></div>
     </div>
-   </div>`;
- });
+    <aside class="cart">
+      <h2>🛒 My Cart <span class="note" id="cartCount">0 items</span></h2>
+      <div id="cartItems" class="note">Cart खाली है।</div>
+      <div class="total"><span>Total</span><span id="cartTotal">₹0</span></div>
+      <div class="note">Minimum order: ₹200</div>
+      <button id="checkoutButton" style="width:100%;margin-top:10px" onclick="showCheckout()" disabled>Proceed to Checkout</button>
+    </aside>
+  </div>
+</section>
 
- document.getElementById("cartItems").innerHTML=
- html||"आपका Cart खाली है।";
+<section id="checkoutPage" class="hidden section">
+  <div class="panel"><h2>Checkout</h2>
+    <form id="checkoutForm">
+      <label>पूरा नाम</label><input id="customerName" required placeholder="अपना नाम">
+      <label>मोबाइल नंबर</label><input id="customerPhone" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का नंबर">
+      <label>Delivery Address</label><textarea id="customerAddress" required rows="3" placeholder="पूरा पता"></textarea>
+      <label>Payment (Demo only)</label>
+      <select id="paymentMethod">
+        <option>Cash on Delivery (Demo)</option>
+        <option>UPI (Demo — no real payment)</option>
+      </select>
+      <p class="note">यह Demo है। कोई असली पेमेंट नहीं होगा।</p>
+      <button type="submit">Place Demo Order</button>
+      <button type="button" class="light" onclick="showPage('shop')">Back to Shop</button>
+    </form>
+  </div>
+</section>
 
- document.getElementById("total").textContent=total;
- document.getElementById("cartCount").textContent=count;
+<section id="ordersPage" class="hidden section"><h2>📦 My Orders</h2><div id="ordersList"></div></section>
+<section id="adminPage" class="hidden section">
+  <h2>🛠️ Admin Dashboard — Demo</h2>
+  <div class="panel" id="adminStats"></div><div id="adminOrders"></div>
+</section>
+</main>
+<footer>ApniVibe Demo • Food & Grocery • Demo orders only — no real payment</footer>
+
+<script>
+const products = [
+{id:1,name:'Margherita Pizza',category:'Pizza',section:'Food',price:199,emoji:'🍕',desc:'Classic cheese pizza'},
+{id:2,name:'Paneer Pizza',category:'Pizza',section:'Food',price:249,emoji:'🍕',desc:'Paneer and cheese'},
+{id:3,name:'Veg Burger',category:'Burger',section:'Food',price:99,emoji:'🍔',desc:'Fresh veg patty'},
+{id:4,name:'Cheese Burger',category:'Burger',section:'Food',price:129,emoji:'🍔',desc:'Cheese loaded burger'},
+{id:5,name:'French Fries',category:'Snacks',section:'Food',price:79,emoji:'🍟',desc:'Crispy salted fries'},
+{id:6,name:'Club Sandwich',category:'Snacks',section:'Food',price:149,emoji:'🥪',desc:'Grilled sandwich'},
+{id:7,name:'Chocolate Cake',category:'Cake',section:'Food',price:499,emoji:'🎂',desc:'Birthday celebration cake'},
+{id:8,name:'Black Forest Cake',category:'Cake',section:'Food',price:549,emoji:'🍰',desc:'Cream and chocolate'},
+{id:9,name:'Cold Coffee',category:'Drinks',section:'Food',price:99,emoji:'🥤',desc:'Chilled coffee'},
+{id:10,name:'Fresh Juice',category:'Drinks',section:'Food',price:89,emoji:'🧃',desc:'Seasonal fruit juice'},
+{id:11,name:'Masala Dosa',category:'South Indian',section:'Food',price:129,emoji:'🥞',desc:'Crispy dosa'},
+{id:12,name:'Veg Noodles',category:'Chinese',section:'Food',price:119,emoji:'🍜',desc:'Stir-fried noodles'},
+{id:13,name:'Aashirvaad Atta 5kg',category:'Atta & Rice',section:'Grocery',price:220,emoji:'🌾',desc:'Whole wheat flour'},
+{id:14,name:'Basmati Rice 5kg',category:'Atta & Rice',section:'Grocery',price:260,emoji:'🍚',desc:'Aromatic rice'},
+{id:15,name:'Toor Dal 1kg',category:'Dal & Pulses',section:'Grocery',price:120,emoji:'🫘',desc:'Daily kitchen essential'},
+{id:16,name:'Moong Dal 1kg',category:'Dal & Pulses',section:'Grocery',price:135,emoji:'🫘',desc:'Clean packed pulses'},
+{id:17,name:'Cooking Oil 1L',category:'Oil & Masala',section:'Grocery',price:180,emoji:'🫗',desc:'Refined cooking oil'},
+{id:18,name:'Turmeric Powder',category:'Oil & Masala',section:'Grocery',price:45,emoji:'🟡',desc:'Kitchen spice'},
+{id:19,name:'Milk 1L',category:'Dairy',section:'Grocery',price:65,emoji:'🥛',desc:'Daily fresh milk'},
+{id:20,name:'Paneer 200g',category:'Dairy',section:'Grocery',price:90,emoji:'🧀',desc:'Fresh paneer'},
+{id:21,name:'Banana 1 dozen',category:'Fruits',section:'Grocery',price:60,emoji:'🍌',desc:'Fresh bananas'},
+{id:22,name:'Apple 1kg',category:'Fruits',section:'Grocery',price:160,emoji:'🍎',desc:'Crisp apples'},
+{id:23,name:'Tomato 1kg',category:'Vegetables',section:'Grocery',price:40,emoji:'🍅',desc:'Fresh vegetables'},
+{id:24,name:'Potato 1kg',category:'Vegetables',section:'Grocery',price:35,emoji:'🥔',desc:'Daily kitchen use'},
+{id:25,name:'Sugar 1kg',category:'Staples',section:'Grocery',price:45,emoji:'🧂',desc:'Fine sugar'},
+{id:26,name:'Salt 1kg',category:'Staples',section:'Grocery',price:20,emoji:'🧂',desc:'Iodized salt'}
+];
+const addOns = [
+{id:101,name:'Birthday Candles',price:30,emoji:'🕯️'},
+{id:102,name:'Balloon Pack',price:99,emoji:'🎈'},
+{id:103,name:'Party Poppers',price:120,emoji:'🎉'},
+{id:104,name:'Birthday Cap Set',price:60,emoji:'🥳'}
+];
+let cart = {}, currentSection='Food', currentCategory='All';
+const money = n => '₹' + n;
+const getOrders = () => JSON.parse(localStorage.getItem('apnivibe_orders') || '[]');
+const saveOrders = list => localStorage.setItem('apnivibe_orders', JSON.stringify(list));
+
+function showPage(page){
+  ['homePage','shopPage','checkoutPage','ordersPage','adminPage'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  const map={home:'homePage',shop:'shopPage',checkout:'checkoutPage',orders:'ordersPage',admin:'adminPage'};
+  document.getElementById(map[page]).classList.remove('hidden');
+  if(page==='orders') renderOrders();
+  if(page==='admin') renderAdmin();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-window.changeQty=function(id,change){
- cart[id]=(cart[id]||0)+change;
- if(cart[id]<=0)delete cart[id];
- renderCart();
-};
-
-window.showCheckout=function(){
- if(!Object.keys(cart).length){
-  alert("पहले Cart में सामान जोड़ें।");
-  return;
- }
- if(!auth.currentUser){
-  alert("पहले Login करें।");
-  document.getElementById("account").scrollIntoView();
-  return;
- }
- document.getElementById("checkout").classList.remove("hidden");
- document.getElementById("checkout").scrollIntoView();
-};
-
-// EMAIL SIGNUP
-
-window.signup=async function(){
- try{
-  const email=document.getElementById("email").value.trim();
-  const password=document.getElementById("password").value;
-
-  if(password.length<6)throw Error("Password कम से कम 6 अक्षर का होना चाहिए।");
-
-  const result=await createUserWithEmailAndPassword(auth,email,password);
-
-  await setDoc(doc(db,"users",result.user.uid),{
-   email:email,
-   name:"",
-   role:"customer",
-   createdAt:serverTimestamp()
-  });
-
-  alert("Account बन गया!");
- }catch(e){alert(e.message)}
-};
-
-// EMAIL LOGIN
-
-window.login=async function(){
- try{
-  await signInWithEmailAndPassword(
-   auth,
-   document.getElementById("email").value.trim(),
-   document.getElementById("password").value
-  );
-  alert("Login Successful!");
- }catch(e){alert(e.message)}
-};
-
-// PHONE OTP
-
-window.sendOTP=async function(){
- try{
-  const phone=document.getElementById("mobile").value.trim();
-
-  if(!/^\+[1-9]\d{7,14}$/.test(phone)){
-   throw Error("मोबाइल नंबर +91XXXXXXXXXX के रूप में लिखें।");
-  }
-
-  if(!window.recaptchaVerifier){
-   window.recaptchaVerifier=new RecaptchaVerifier(
-    auth,"recaptcha-container",{}
-   );
-  }
-
-  confirmation=await signInWithPhoneNumber(
-   auth,phone,window.recaptchaVerifier
-  );
-
-  alert("OTP भेज दिया गया है।");
- }catch(e){
-  alert(e.message);
- }
-};
-
-window.verifyOTP=async function(){
- try{
-  if(!confirmation)throw Error("पहले OTP भेजें।");
-
-  await confirmation.confirm(
-   document.getElementById("otp").value.trim()
-  );
-
-  alert("Mobile Login Successful!");
- }catch(e){alert(e.message)}
-};
-
-// AUTH STATE
-
-onAuthStateChanged(auth,async user=>{
- currentUser=user;
-
- document.getElementById("loggedOut").classList.toggle("hidden",!!user);
- document.getElementById("loggedIn").classList.toggle("hidden",!user);
-
- if(user){
-  document.getElementById("userInfo").textContent=
-   "Logged in: "+(user.email||user.phoneNumber);
-
-  await checkRole(user);
- }
+function openCategory(section, category='All'){
+  currentSection=section;currentCategory=category;
+  document.getElementById('shopSearch').value='';
+  document.getElementById('shopTitle').textContent=section==='Food'?'🍕 Food Menu':'🥦 Grocery Store';
+  const cats=section==='Food'?['All','Pizza','Burger','Snacks','Cake','Drinks','South Indian','Chinese']:['All','Atta & Rice','Dal & Pulses','Oil & Masala','Dairy','Fruits','Vegetables','Staples'];
+  document.getElementById('categoryFilters').innerHTML=cats.map(c=>`<button class="${c===category?'':'light'}" onclick="selectCategory('${c}')">${c}</button>`).join('');
+  showPage('shop');renderProducts();
+}
+function selectCategory(category){
+  currentCategory=category;
+  document.querySelectorAll('#categoryFilters button').forEach(b=>{let active=b.textContent===category;b.className=active?'':'light'});
+  renderProducts();
+}
+function globalSearch(value){
+  openCategory('Food','All');
+  document.getElementById('shopSearch').value=value;
+  renderProducts();
+}
+function renderProducts(){
+  const term=document.getElementById('shopSearch').value.trim().toLowerCase();
+  const list=products.filter(p=>p.section===currentSection&&(currentCategory==='All'||p.category===currentCategory)&&(!term||`${p.name} ${p.category} ${p.desc}`.toLowerCase().includes(term)));
+  document.getElementById('products').innerHTML=list.length?list.map(p=>productCard(p)).join(''):'<div class="panel">कोई सामान नहीं मिला। दूसरा नाम खोजें या All चुनें।</div>';
+  renderSuggestions();
+}
+function productCard(p){
+  const q=cart[p.id]||0;
+  return `<article class="card"><div class="pic">${p.emoji}</div><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="controls"><div class="qty"><button onclick="changeQty(${p.id},-1)">−</button><span>${q}</span><button onclick="changeQty(${p.id},1)">+</button></div><button class="add" onclick="changeQty(${p.id},1)">Add</button></div></article>`;
+}
+function renderSuggestions(){
+  const box=document.getElementById('suggestions');
+  const cakeVisible=currentSection==='Food'&&(currentCategory==='Cake'||(document.getElementById('shopSearch').value||'').trim().toLowerCase().includes('cake'));
+  if(!cakeVisible){box.classList.add('hidden');box.innerHTML='';return}
+  box.classList.remove('hidden');
+  box.innerHTML=`<h3>🎉 Cake के साथ Birthday Celebration Items</h3><div class="note">Cake के साथ candles, balloons और party poppers भी Cart में जोड़ें।</div><div class="suggestgrid">${addOns.map(a=>{let q=cart[a.id]||0;return `<div class="mini"><span class="em">${a.emoji}</span><div style="flex:1"><b>${a.name}</b><small>${money(a.price)}</small><div class="controls"><div class="qty"><button onclick="changeAddon(${a.id},-1)">−</button><span>${q}</span><button onclick="changeAddon(${a.id},1)">+</button></div></div></div></div>`}).join('')}</div>`;
+}
+function changeQty(id,delta){
+  cart[id]=Math.max(0,(cart[id]||0)+delta);
+  if(!cart[id])delete cart[id];
+  renderProducts();renderCart();
+}
+function changeAddon(id,delta){
+  cart[id]=Math.max(0,(cart[id]||0)+delta);
+  if(!cart[id])delete cart[id];
+  renderSuggestions();renderCart();
+}
+function allItems(){return [...products,...addOns.map(a=>({...a,section:'Add-on'}))]}
+function renderCart(){
+  const items=allItems().filter(p=>cart[p.id]);
+  const count=items.reduce((s,p)=>s+cart[p.id],0);
+  const sum=items.reduce((s,p)=>s+p.price*cart[p.id],0);
+  document.getElementById('cartCount').textContent=count+' items';
+  document.getElementById('cartItems').innerHTML=items.length?items.map(p=>`<div class="cartrow"><span>${p.emoji} ${p.name} × ${cart[p.id]}</span><b>${money(p.price*cart[p.id])}</b></div>`).join(''):'Cart खाली है।';
+  document.getElementById('cartTotal').textContent=money(sum);
+  document.getElementById('checkoutButton').disabled=sum<200;
+  document.getElementById('checkoutButton').textContent=sum>0&&sum<200?'₹200 minimum पूरा करें':'Proceed to Checkout';
+}
+function showCheckout(){showPage('checkout')}
+document.getElementById('checkoutForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const items=allItems().filter(p=>cart[p.id]).map(p=>({name:p.name,price:p.price,qty:cart[p.id]}));
+  const total=items.reduce((s,p)=>s+p.price*p.qty,0);
+  if(total<200){alert('Minimum order ₹200 है।');return}
+  const orders=getOrders(),id='AV'+Date.now().toString().slice(-8);
+  orders.unshift({id,items,total,customer:document.getElementById('customerName').value,phone:document.getElementById('customerPhone').value,address:document.getElementById('customerAddress').value,payment:document.getElementById('paymentMethod').value,status:'New',created:new Date().toLocaleString('en-IN')});
+  saveOrders(orders);cart={};renderCart();e.target.reset();
+  alert('Demo order place हो गया! Order ID: '+id);showPage('orders');
 });
-
-async function checkRole(user){
- try{
-  const token=await user.getIdTokenResult(true);
-  const role=token.claims.role||"customer";
-  currentRole=role;
-
-  document.getElementById("dashboard").classList.toggle(
-   "hidden",!["admin","store","delivery"].includes(role)
-  );
-
-  document.getElementById("roleInfo").textContent=
-   "आपका सुरक्षित Role: "+role;
-
-  const content=document.getElementById("dashboardContent");
-
-  if(role==="admin"){
-   content.textContent="Admin Dashboard: Order और platform management.";
-  }else if(role==="store"){
-   content.textContent="Store Dashboard: Store orders management.";
-  }else if(role==="delivery"){
-   content.textContent="Delivery Dashboard: Assigned deliveries.";
-  }else{
-   content.textContent="";
-  }
- }catch(e){
-  console.error(e);
- }
+function renderOrders(){
+  const orders=getOrders();
+  document.getElementById('ordersList').innerHTML=orders.length?orders.map(o=>`<div class="order"><b>Order #${o.id}</b> <span class="pill">${o.status}</span><p class="note">${o.created} • ${o.payment}</p><p>${o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')}</p><b>${money(o.total)}</b><p class="note">${o.address}</p></div>`).join(''):'अभी कोई Order नहीं है।';
 }
-
-// LOGOUT
-
-window.logout=async function(){
- await signOut(auth);
- alert("Logout Successful");
-};
-
-// CREATE ORDER AND REAL PAYMENT
-
-window.placeOrder=async function(){
- try{
-  const user=auth.currentUser;
-
-  if(!user)throw Error("पहले Login करें।");
-
-  if(!Object.keys(cart).length)throw Error("Cart खाली है।");
-
-  const name=document.getElementById("deliveryName").value.trim();
-  const phone=document.getElementById("deliveryPhone").value.trim();
-  const address=document.getElementById("deliveryAddress").value.trim();
-
-  if(!name||!address||!/^\d{10}$/.test(phone)){
-   throw Error("नाम, सही 10 अंकों का मोबाइल और पूरा पता भरें।");
-  }
-
-  const total=products.reduce((sum,p)=>{
-   return sum+(cart[p.id]||0)*p.price;
-  },0);
-
-  if(total<=0)throw Error("Order Amount गलत है।");
-
-  document.getElementById("checkoutMessage").textContent=
-   "Secure payment तैयार हो रहा है...";
-
-  /*
-   IMPORTANT:
-   Razorpay order server पर बनाया जाएगा।
-   Amount भी server पर product prices से calculate होगा।
-  */
-
-  const {getFunctions,httpsCallable}=
-   await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js");
-
-  const functions=getFunctions(app,"asia-south1");
-
-  const createPayment=httpsCallable(functions,"createRazorpayOrder");
-
-  const paymentResult=await createPayment({
-   items:Object.entries(cart).map(([id,qty])=>({id,qty}))
-  });
-
-  const payment=paymentResult.data;
-
-  if(!payment.orderId||!payment.keyId||!payment.amount){
-   throw Error("Payment Order Server Response गलत है।");
-  }
-
-  const options={
-   key:payment.keyId,
-   amount:payment.amount,
-   currency:payment.currency||"INR",
-   name:"ApniVibe",
-   description:"Food & Grocery Order",
-   order_id:payment.orderId,
-
-   prefill:{
-    name:name,
-    contact:phone,
-    email:user.email||""
-   },
-
-   theme:{color:"#16a34a"},
-
-   handler:async function(response){
-    try{
-     const verifyPayment=httpsCallable(
-      functions,"verifyRazorpayPayment"
-     );
-
-     const verification=await verifyPayment({
-      orderId:payment.orderId,
-      paymentId:response.razorpay_payment_id,
-      signature:response.razorpay_signature,
-      name:name,
-      phone:phone,
-      address:address
-     });
-
-     if(!verification.data.verified){
-      throw Error("Payment Verification Failed");
-     }
-
-     cart={};
-     renderCart();
-
-     document.getElementById("checkoutMessage").textContent=
-      "Payment Successful! आपका Order Confirm हो गया है।";
-
-     alert("ApniVibe: आपका भुगतान सफल रहा!");
-
-     loadOrders();
-
-    }catch(e){
-     document.getElementById("checkoutMessage").textContent=e.message;
-     alert("Payment verification error: "+e.message);
-    }
-   },
-
-   modal:{
-    ondismiss:function(){
-     document.getElementById("checkoutMessage").textContent=
-      "Payment पूरा नहीं हुआ। आप दोबारा कोशिश कर सकते हैं।";
-    }
-   }
-  };
-
-  const razorpay=new window.Razorpay(options);
-
-  razorpay.on("payment.failed",function(response){
-   alert("Payment Failed: "+response.error.description);
-  });
-
-  razorpay.open();
-
- }catch(e){
-  document.getElementById("checkoutMessage").textContent=e.message;
-  alert("Checkout Error: "+e.message);
- }
-};
-
-// CUSTOMER ORDER HISTORY
-
-window.loadOrders=async function(){
- try{
-  const user=auth.currentUser;
-  if(!user)return;
-
-  const q=query(
-   collection(db,"orders"),
-   where("userId","==",user.uid)
-  );
-
-  const result=await getDocs(q);
-  const box=document.getElementById("myOrders");
-
-  box.innerHTML="<h3>My Orders</h3>";
-
-  if(result.empty){
-   box.innerHTML+="अभी कोई Order नहीं है।";
-   return;
-  }
-
-  result.forEach(d=>{
-   const order=d.data();
-
-   box.innerHTML+=`
-    <div class="panel">
-     <b>Order:</b> ${d.id}<br>
-     <b>Total:</b> ₹${order.amount||0}<br>
-     <b>Status:</b> ${order.status||"Processing"}<br>
-     <b>Payment:</b> ${order.paymentStatus||"Pending"}
-    </div>`;
-  });
- }catch(e){
-  alert("Orders लोड नहीं हुए: "+e.message);
- }
-};
-
+function renderAdmin(){
+  const orders=getOrders(),sales=orders.reduce((s,o)=>s+o.total,0);
+  document.getElementById('adminStats').innerHTML=`<b>Total Orders:</b> ${orders.length} &nbsp; <b>Demo Sales:</b> ${money(sales)}<p class="note">यह खुला demo admin है। Live करने से पहले secure admin login जरूरी है।</p>`;
+  document.getElementById('adminOrders').innerHTML=orders.length?orders.map(o=>`<div class="order"><b>#${o.id} — ${o.customer}</b> <span class="pill">${o.status}</span><p>${o.phone} • ${o.address}</p><p>${o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')} — <b>${money(o.total)}</b></p><button onclick="updateStatus('${o.id}','Accepted')">Accept</button> <button class="light" onclick="updateStatus('${o.id}','Preparing')">Preparing</button> <button class="light" onclick="updateStatus('${o.id}','Out for delivery')">Out for delivery</button> <button class="green" onclick="updateStatus('${o.id}','Delivered')">Delivered</button> <button style="background:#b52d3b" onclick="updateStatus('${o.id}','Rejected')">Reject</button></div>`).join(''):'अभी कोई Order नहीं है।';
+}
+function updateStatus(id,status){
+  const orders=getOrders(),o=orders.find(x=>x.id===id);
+  if(o){o.status=status;saveOrders(orders);renderAdmin()}
+}
+renderCart();
 </script>
 </body>
 </html>
