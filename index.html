@@ -1,274 +1,413 @@
-
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ApniVibe | Food & Grocery</title>
 <style>
-:root{--purple:#6417c8;--green:#16864d;--orange:#ff941c;--ink:#211b32;--muted:#716b7d;--bg:#f7f5fc;--line:#e7e0f2}
+:root{--green:#16834a;--dark:#17251d;--muted:#66736b;--line:#e6ece8;--bg:#f6f8f6}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
-header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.wrap{max-width:1180px;margin:auto;padding:14px 18px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{font-size:24px;font-weight:900;color:var(--purple)}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-button{border:0;border-radius:10px;padding:10px 13px;background:var(--purple);color:#fff;font-weight:700;cursor:pointer}
-button:disabled{opacity:.45;cursor:not-allowed}
-.light{background:#f0e9fb;color:var(--purple);border:1px solid #e3d5f8}
-.green{background:var(--green)}.orange{background:var(--orange)}
-.hero{margin:18px 0;padding:25px;border-radius:18px;background:linear-gradient(115deg,#4f0db3,#873be5);color:white}
-.hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,38px)}
-.hero p{margin:0 0 16px;color:#f1e9ff}
-.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px}
-.quick{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
-.quick button{flex:1;min-width:130px;padding:14px}
-.section{margin:22px 0}.section h2{margin:0 0 12px;font-size:22px}
-.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}
-.filters button{white-space:nowrap;border-radius:99px;padding:8px 14px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
-.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;min-width:0}
-.pic{height:94px;background:#f4effb;border-radius:10px;display:grid;place-items:center;font-size:48px}
-.card h3{font-size:15px;margin:8px 0 3px}
-.desc{font-size:12px;color:var(--muted);min-height:15px}
-.price{font-weight:800;margin:6px 0}
-.controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.qty{display:flex;align-items:center;border:1px solid #dfd2f3;border-radius:9px;overflow:hidden}
-.qty button{border-radius:0;padding:6px 10px;background:#f1eafa;color:var(--purple)}
-.qty span{min-width:24px;text-align:center;font-weight:700}
-.add{padding:7px 10px;font-size:12px}
-.cart{position:sticky;top:88px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}
-.cartrow{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:9px 0;font-size:13px}
-.total{display:flex;justify-content:space-between;font-weight:900;font-size:19px;padding:12px 0}
-.note{font-size:12px;color:var(--muted)}
-.suggest{background:#fff8e9;border:1px solid #f5dfb0;border-radius:15px;padding:14px;margin-top:16px}
-.suggest h3{margin:0 0 5px}
-.suggestgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
-.mini{background:#fff;border:1px solid #f0dfbd;border-radius:11px;padding:9px;display:flex;align-items:center;gap:8px;min-width:0}
-.mini .em{font-size:28px}.mini b{font-size:12px}
-.mini small{display:block;color:var(--muted);margin:3px 0}
-.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0}
-input,textarea,select{width:100%;padding:11px;border:1px solid #ddd4e9;border-radius:10px;margin:5px 0 12px;font:inherit}
-label{font-size:13px;font-weight:700}
-.hidden{display:none!important}
-.order{padding:13px;border:1px solid var(--line);border-radius:12px;margin:10px 0;background:#fff}
-.pill{background:#eee5fb;color:var(--purple);padding:4px 8px;border-radius:99px;font-size:12px}
-footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.cart{position:static;order:2}.products{gap:8px}.wrap{padding:12px}}
-@media(max-width:380px){.pic{height:78px}.card{padding:8px}.card h3{font-size:13px}.controls{gap:3px}.qty button{padding:5px 8px}}
+body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+header{background:#fff;position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line);padding:12px max(16px,calc((100% - 1180px)/2))}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:24px;color:var(--green)}
+.search{flex:1;min-width:190px;padding:12px 15px;border:1px solid var(--line);border-radius:12px;font-size:16px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.nav button,.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;cursor:pointer;font-weight:650}
+.nav button.active,.primary{background:var(--green);color:#fff;border-color:var(--green)}
+main{max-width:1180px;margin:auto;padding:20px 16px 90px}
+.hero{background:linear-gradient(110deg,#e3f4e9,#fff);border-radius:18px;padding:24px;margin-bottom:20px}
+.hero h1{margin:0 0 7px;font-size:clamp(24px,4vw,36px)}
+.muted{color:var(--muted)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:24px 0 12px}
+.section-head h2{margin:0;font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.photo{height:138px;background:#edf2ee;display:grid;place-items:center;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}
+.info{padding:11px;display:flex;flex-direction:column;gap:7px;flex:1}
+.name{font-weight:750;line-height:1.25}
+.meta{font-size:12px;color:var(--muted)}
+.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:8px}
+.price{font-weight:850}
+.add{border:0;background:var(--green);color:white;border-radius:9px;padding:8px 12px;font-weight:750;cursor:pointer}
+.empty{background:#fff;padding:28px;text-align:center;border-radius:14px;color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+.field{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;margin:5px 0 12px;font:inherit}
+.btn{padding:10px 15px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-weight:700}
+.btn.primary{background:var(--green);color:#fff}
+.cart-line{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:7px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;gap:10px;padding:10px;z-index:6}
+.bottom button{flex:1;max-width:220px}
+.hide{display:none!important}
+.tag{font-size:11px;background:#edf7f0;color:#17663c;padding:4px 8px;border-radius:99px;width:max-content}
+@media(max-width:800px){
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.photo{height:125px}
+main{padding:14px 12px 90px}
+.hero{padding:18px}
+.section-head h2{font-size:19px}
+}
+@media(max-width:380px){.photo{height:105px}.info{padding:9px}.add{padding:7px 9px}}
 </style>
 </head>
 <body>
-<header><div class="wrap top">
-  <div class="logo">🛍️ ApniVibe</div>
-  <nav>
-    <button class="light" onclick="showPage('home')">Home</button>
-    <button class="light" onclick="openCategory('Food')">Food</button>
-    <button class="light" onclick="openCategory('Grocery')">Grocery</button>
-    <button class="light" onclick="showPage('orders')">My Orders</button>
-    <button onclick="showPage('admin')">Admin Demo</button>
-  </nav>
-</div></header>
 
-<main class="wrap">
+<header>
+<div class="top">
+<div class="brand">ApniVibe</div>
+<input id="search" class="search" placeholder="Search: Onion Pizza, atta, dal..." aria-label="Search products">
+<button class="btn" onclick="showPage('cart')">🛒 Cart <b id="cartCount">0</b></button>
+</div>
+<nav class="nav">
+<button id="nav-home" class="active" onclick="showPage('home')">Home</button>
+<button id="nav-grocery" onclick="showPage('grocery')">Grocery</button>
+<button id="nav-food" onclick="showPage('food')">Fast Food</button>
+<button id="nav-orders" onclick="showPage('orders')">My Orders</button>
+<button id="nav-account" onclick="showPage('account')">Account / Settings</button>
+</nav>
+</header>
+
+<main>
 <section id="homePage">
-  <div class="hero">
-    <h1>ApniVibe — Food & Grocery Delivery</h1>
-    <p>Ghar baithe sab kuch payein! पसंदीदा सामान चुनें और सीधे Cart में जोड़ें।</p>
-    <input class="search" id="homeSearch" placeholder="🔎 Food या Grocery खोजें..." oninput="globalSearch(this.value)">
-  </div>
-  <div class="quick">
-    <button class="orange" onclick="openCategory('Food')">🍕 Food Order Now</button>
-    <button class="green" onclick="openCategory('Grocery')">🥦 Grocery Order Now</button>
-  </div>
-  <section class="section"><h2>Popular Categories</h2><div class="filters">
-    <button class="light" onclick="openCategory('Food','Pizza')">🍕 Pizza</button>
-    <button class="light" onclick="openCategory('Food','Burger')">🍔 Burger</button>
-    <button class="light" onclick="openCategory('Food','Cake')">🎂 Cake</button>
-    <button class="light" onclick="openCategory('Food','Drinks')">🥤 Drinks</button>
-    <button class="light" onclick="openCategory('Grocery','Fruits')">🍎 Fruits</button>
-    <button class="light" onclick="openCategory('Grocery','Vegetables')">🥦 Vegetables</button>
-  </div></section>
+<div class="hero">
+<h1>हर दिन की खरीदारी, अब आसान</h1>
+<div class="muted">Food और Grocery एक ही जगह • Search करें • Cart में जोड़ें</div>
+</div>
+<div id="homeSections"></div>
 </section>
 
-<section id="shopPage" class="hidden">
-  <div class="section">
-    <h2 id="shopTitle">Food Menu</h2>
-    <input class="search" id="shopSearch" placeholder="🔎 नाम से खोजें..." oninput="renderProducts()">
-    <div class="filters" id="categoryFilters"></div>
-  </div>
-  <div class="layout">
-    <div>
-      <div id="products" class="products"></div>
-      <div id="suggestions" class="suggest hidden"></div>
-    </div>
-    <aside class="cart">
-      <h2>🛒 My Cart <span class="note" id="cartCount">0 items</span></h2>
-      <div id="cartItems" class="note">Cart खाली है।</div>
-      <div class="total"><span>Total</span><span id="cartTotal">₹0</span></div>
-      <div class="note">Minimum order: ₹200</div>
-      <button id="checkoutButton" style="width:100%;margin-top:10px" onclick="showCheckout()" disabled>Proceed to Checkout</button>
-    </aside>
-  </div>
+<section id="catalogPage" class="hide">
+<div class="section-head">
+<h2 id="catalogTitle"></h2>
+<span class="muted" id="resultCount"></span>
+</div>
+<div id="catalogGrid" class="grid"></div>
 </section>
 
-<section id="checkoutPage" class="hidden section">
-  <div class="panel"><h2>Checkout</h2>
-    <form id="checkoutForm">
-      <label>पूरा नाम</label><input id="customerName" required placeholder="अपना नाम">
-      <label>मोबाइल नंबर</label><input id="customerPhone" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का नंबर">
-      <label>Delivery Address</label><textarea id="customerAddress" required rows="3" placeholder="पूरा पता"></textarea>
-      <label>Payment (Demo only)</label>
-      <select id="paymentMethod">
-        <option>Cash on Delivery (Demo)</option>
-        <option>UPI (Demo — no real payment)</option>
-      </select>
-      <p class="note">यह Demo है। कोई असली पेमेंट नहीं होगा।</p>
-      <button type="submit">Place Demo Order</button>
-      <button type="button" class="light" onclick="showPage('shop')">Back to Shop</button>
-    </form>
-  </div>
+<section id="cartPage" class="hide">
+<div class="section-head"><h2>आपका Cart</h2></div>
+<div class="panel" id="cartContents"></div>
 </section>
 
-<section id="ordersPage" class="hidden section"><h2>📦 My Orders</h2><div id="ordersList"></div></section>
-<section id="adminPage" class="hidden section">
-  <h2>🛠️ Admin Dashboard — Demo</h2>
-  <div class="panel" id="adminStats"></div><div id="adminOrders"></div>
+<section id="ordersPage" class="hide">
+<div class="section-head"><h2>My Orders</h2></div>
+<div id="ordersContents"></div>
+</section>
+
+<section id="accountPage" class="hide">
+<div class="section-head"><h2>Account & Settings</h2></div>
+<div class="panel">
+<h3>Customer Login</h3>
+<p class="muted">यह अभी स्थानीय Demo Profile है। सुरक्षित Login के लिए Backend जरूरी है।</p>
+<label>Email</label>
+<input id="email" class="field" type="email" placeholder="you@example.com">
+<label>Password</label>
+<input id="password" class="field" type="password" placeholder="Password">
+<button class="btn primary" onclick="login()">Login / Save Profile</button>
+<button class="btn" onclick="logout()">Logout</button>
+<p id="loginState" class="muted"></p>
+</div>
 </section>
 </main>
-<footer>ApniVibe Demo • Food & Grocery • Demo orders only — no real payment</footer>
+
+<div class="bottom">
+<button class="btn" onclick="showPage('grocery')">🛍 Grocery</button>
+<button class="btn" onclick="showPage('food')">🍕 Fast Food</button>
+<button class="btn primary" onclick="showPage('cart')">🛒 Cart</button>
+</div>
 
 <script>
-const products = [
-{id:1,name:'Margherita Pizza',category:'Pizza',section:'Food',price:199,emoji:'🍕',desc:'Classic cheese pizza'},
-{id:2,name:'Paneer Pizza',category:'Pizza',section:'Food',price:249,emoji:'🍕',desc:'Paneer and cheese'},
-{id:3,name:'Veg Burger',category:'Burger',section:'Food',price:99,emoji:'🍔',desc:'Fresh veg patty'},
-{id:4,name:'Cheese Burger',category:'Burger',section:'Food',price:129,emoji:'🍔',desc:'Cheese loaded burger'},
-{id:5,name:'French Fries',category:'Snacks',section:'Food',price:79,emoji:'🍟',desc:'Crispy salted fries'},
-{id:6,name:'Club Sandwich',category:'Snacks',section:'Food',price:149,emoji:'🥪',desc:'Grilled sandwich'},
-{id:7,name:'Chocolate Cake',category:'Cake',section:'Food',price:499,emoji:'🎂',desc:'Birthday celebration cake'},
-{id:8,name:'Black Forest Cake',category:'Cake',section:'Food',price:549,emoji:'🍰',desc:'Cream and chocolate'},
-{id:9,name:'Cold Coffee',category:'Drinks',section:'Food',price:99,emoji:'🥤',desc:'Chilled coffee'},
-{id:10,name:'Fresh Juice',category:'Drinks',section:'Food',price:89,emoji:'🧃',desc:'Seasonal fruit juice'},
-{id:11,name:'Masala Dosa',category:'South Indian',section:'Food',price:129,emoji:'🥞',desc:'Crispy dosa'},
-{id:12,name:'Veg Noodles',category:'Chinese',section:'Food',price:119,emoji:'🍜',desc:'Stir-fried noodles'},
-{id:13,name:'Aashirvaad Atta 5kg',category:'Atta & Rice',section:'Grocery',price:220,emoji:'🌾',desc:'Whole wheat flour'},
-{id:14,name:'Basmati Rice 5kg',category:'Atta & Rice',section:'Grocery',price:260,emoji:'🍚',desc:'Aromatic rice'},
-{id:15,name:'Toor Dal 1kg',category:'Dal & Pulses',section:'Grocery',price:120,emoji:'🫘',desc:'Daily kitchen essential'},
-{id:16,name:'Moong Dal 1kg',category:'Dal & Pulses',section:'Grocery',price:135,emoji:'🫘',desc:'Clean packed pulses'},
-{id:17,name:'Cooking Oil 1L',category:'Oil & Masala',section:'Grocery',price:180,emoji:'🫗',desc:'Refined cooking oil'},
-{id:18,name:'Turmeric Powder',category:'Oil & Masala',section:'Grocery',price:45,emoji:'🟡',desc:'Kitchen spice'},
-{id:19,name:'Milk 1L',category:'Dairy',section:'Grocery',price:65,emoji:'🥛',desc:'Daily fresh milk'},
-{id:20,name:'Paneer 200g',category:'Dairy',section:'Grocery',price:90,emoji:'🧀',desc:'Fresh paneer'},
-{id:21,name:'Banana 1 dozen',category:'Fruits',section:'Grocery',price:60,emoji:'🍌',desc:'Fresh bananas'},
-{id:22,name:'Apple 1kg',category:'Fruits',section:'Grocery',price:160,emoji:'🍎',desc:'Crisp apples'},
-{id:23,name:'Tomato 1kg',category:'Vegetables',section:'Grocery',price:40,emoji:'🍅',desc:'Fresh vegetables'},
-{id:24,name:'Potato 1kg',category:'Vegetables',section:'Grocery',price:35,emoji:'🥔',desc:'Daily kitchen use'},
-{id:25,name:'Sugar 1kg',category:'Staples',section:'Grocery',price:45,emoji:'🧂',desc:'Fine sugar'},
-{id:26,name:'Salt 1kg',category:'Staples',section:'Grocery',price:20,emoji:'🧂',desc:'Iodized salt'}
-];
-const addOns = [
-{id:101,name:'Birthday Candles',price:30,emoji:'🕯️'},
-{id:102,name:'Balloon Pack',price:99,emoji:'🎈'},
-{id:103,name:'Party Poppers',price:120,emoji:'🎉'},
-{id:104,name:'Birthday Cap Set',price:60,emoji:'🥳'}
-];
-let cart = {}, currentSection='Food', currentCategory='All';
-const money = n => '₹' + n;
-const getOrders = () => JSON.parse(localStorage.getItem('apnivibe_orders') || '[]');
-const saveOrders = list => localStorage.setItem('apnivibe_orders', JSON.stringify(list));
+const raw=[
+['Onion Pizza','Food','Pizza',249,'onion pizza'],
+['Double Onion Pizza','Food','Pizza',299,'double onion pizza'],
+['Cheese Pizza','Food','Pizza',229,'cheese pizza'],
+['Paneer Pizza','Food','Pizza',279,'paneer pizza'],
+['Margherita Pizza','Food','Pizza',199,'margherita pizza'],
+['Farmhouse Pizza','Food','Pizza',329,'farmhouse pizza'],
+['Veg Supreme Pizza','Food','Pizza',319,'veg supreme pizza'],
+['Corn Pizza','Food','Pizza',239,'corn pizza'],
+['Aloo Tikki Burger','Food','Burger',79,'aloo tikki burger'],
+['Cheese Burger','Food','Burger',99,'cheese burger'],
+['Paneer Burger','Food','Burger',129,'paneer burger'],
+['Double Patty Burger','Food','Burger',149,'double patty burger'],
+['Veg Maharaja Burger','Food','Burger',159,'veg maharaja burger'],
+['Crispy Veg Burger','Food','Burger',109,'crispy veg burger'],
+['Mexican Burger','Food','Burger',139,'mexican burger'],
+['Classic Veg Burger','Food','Burger',89,'classic veg burger'],
+['Veg Momos','Food','Momos',89,'veg momos'],
+['Paneer Momos','Food','Momos',119,'paneer momos'],
+['Fried Momos','Food','Momos',109,'fried momos'],
+['Tandoori Momos','Food','Momos',139,'tandoori momos'],
+['Hakka Noodles','Food','Chinese',129,'hakka noodles'],
+['Schezwan Noodles','Food','Chinese',149,'schezwan noodles'],
+['Veg Manchurian','Food','Chinese',139,'veg manchurian'],
+['Chilli Paneer','Food','Chinese',179,'chilli paneer'],
+['White Sauce Pasta','Food','Pasta',159,'white sauce pasta'],
+['Red Sauce Pasta','Food','Pasta',149,'red sauce pasta'],
+['Masala Dosa','Food','South Indian',99,'masala dosa'],
+['Idli Sambar','Food','South Indian',69,'idli sambar'],
+['Veg Thali','Food','Thali',169,'indian veg thali'],
+['Paneer Thali','Food','Thali',199,'paneer thali'],
+['French Fries','Food','Snacks',89,'french fries'],
+['Veg Sandwich','Food','Snacks',99,'veg sandwich'],
+['Cold Coffee','Food','Drinks',99,'cold coffee'],
+['Gulab Jamun','Food','Dessert',69,'gulab jamun'],
+['Wheat Atta 5 kg','Grocery','Atta & Flour',245,'wheat flour atta bag'],
+['Besan 1 kg','Grocery','Atta & Flour',95,'besan flour packet'],
+['Maida 1 kg','Grocery','Atta & Flour',48,'maida flour packet'],
+['Sooji 1 kg','Grocery','Atta & Flour',55,'sooji semolina packet'],
+['Basmati Rice 1 kg','Grocery','Rice',115,'basmati rice packet'],
+['Sona Masoori Rice 5 kg','Grocery','Rice',330,'sona masoori rice bag'],
+['Toor Dal 1 kg','Grocery','Pulses',165,'toor dal packet'],
+['Moong Dal 1 kg','Grocery','Pulses',135,'moong dal packet'],
+['Masoor Dal 1 kg','Grocery','Pulses',110,'masoor dal packet'],
+['Chana Dal 1 kg','Grocery','Pulses',95,'chana dal packet'],
+['Iodized Salt 1 kg','Grocery','Essentials',25,'iodized salt packet'],
+['Sugar 1 kg','Grocery','Essentials',48,'sugar packet'],
+['Jaggery 1 kg','Grocery','Essentials',75,'jaggery'],
+['Refined Oil 1 L','Grocery','Oil & Ghee',145,'cooking oil bottle'],
+['Mustard Oil 1 L','Grocery','Oil & Ghee',165,'mustard oil bottle'],
+['Ghee 500 ml','Grocery','Oil & Ghee',285,'ghee jar'],
+['Turmeric Powder 200 g','Grocery','Spices',45,'turmeric powder packet'],
+['Red Chilli Powder 200 g','Grocery','Spices',65,'red chilli powder packet'],
+['Garam Masala 100 g','Grocery','Spices',55,'garam masala packet'],
+['Tea 500 g','Grocery','Beverages',175,'tea packet'],
+['Milk 1 L','Grocery','Dairy',60,'milk pouch'],
+['Curd 400 g','Grocery','Dairy',40,'curd cup'],
+['Paneer 200 g','Grocery','Dairy',85,'paneer pack'],
+['Eggs 6 pcs','Grocery','Daily Needs',48,'eggs carton'],
+['Potato 1 kg','Grocery','Vegetables',30,'potatoes'],
+['Onion 1 kg','Grocery','Vegetables',35,'onions'],
+['Tomato 1 kg','Grocery','Vegetables',40,'tomatoes'],
+['Banana 1 dozen','Grocery','Fruits',55,'banana'],
+['Apple 1 kg','Grocery','Fruits',160,'apples']
+].map((x,i)=>({
+id:i+1,name:x[0],type:x[1],cat:x[2],
+price:x[3],photo:x[4],available:true
+}));
 
-function showPage(page){
-  ['homePage','shopPage','checkoutPage','ordersPage','adminPage'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  const map={home:'homePage',shop:'shopPage',checkout:'checkoutPage',orders:'ordersPage',admin:'adminPage'};
-  document.getElementById(map[page]).classList.remove('hidden');
-  if(page==='orders') renderOrders();
-  if(page==='admin') renderAdmin();
-  window.scrollTo({top:0,behavior:'smooth'});
+let cart=JSON.parse(localStorage.getItem('av_cart')||'{}');
+let orders=JSON.parse(localStorage.getItem('av_orders')||'[]');
+let profile=JSON.parse(localStorage.getItem('av_profile')||'null');
+let page='home',query='';
+
+const money=n=>'₹'+n.toFixed(0);
+
+function save(){
+localStorage.setItem('av_cart',JSON.stringify(cart));
+localStorage.setItem('av_orders',JSON.stringify(orders));
+localStorage.setItem('av_profile',JSON.stringify(profile));
+updateCount();
 }
-function openCategory(section, category='All'){
-  currentSection=section;currentCategory=category;
-  document.getElementById('shopSearch').value='';
-  document.getElementById('shopTitle').textContent=section==='Food'?'🍕 Food Menu':'🥦 Grocery Store';
-  const cats=section==='Food'?['All','Pizza','Burger','Snacks','Cake','Drinks','South Indian','Chinese']:['All','Atta & Rice','Dal & Pulses','Oil & Masala','Dairy','Fruits','Vegetables','Staples'];
-  document.getElementById('categoryFilters').innerHTML=cats.map(c=>`<button class="${c===category?'':'light'}" onclick="selectCategory('${c}')">${c}</button>`).join('');
-  showPage('shop');renderProducts();
+
+function photoUrl(p){
+return 'https://source.unsplash.com/600x400/?'+
+encodeURIComponent(p.photo+', food product photography');
 }
-function selectCategory(category){
-  currentCategory=category;
-  document.querySelectorAll('#categoryFilters button').forEach(b=>{let active=b.textContent===category;b.className=active?'':'light'});
-  renderProducts();
+
+function card(p){
+return `<article class="card">
+<div class="photo">
+<img loading="lazy" src="${photoUrl(p)}" alt="${p.name}"
+onerror="this.style.display='none';this.parentElement.innerHTML='<span>🛍️</span>'">
+</div>
+<div class="info">
+<div class="tag">${p.cat}</div>
+<div class="name">${p.name}</div>
+<div class="meta">${p.type}</div>
+<div class="price-row">
+<span class="price">${money(p.price)}</span>
+<button class="add" onclick="add(${p.id})">+ Add</button>
+</div>
+</div>
+</article>`;
 }
-function globalSearch(value){
-  openCategory('Food','All');
-  document.getElementById('shopSearch').value=value;
-  renderProducts();
+
+function renderGrid(el,items){
+el.innerHTML=items.length
+?items.map(card).join('')
+:'<div class="empty" style="grid-column:1/-1">कोई सामान नहीं मिला। दूसरा नाम Search करें।</div>';
 }
-function renderProducts(){
-  const term=document.getElementById('shopSearch').value.trim().toLowerCase();
-  const list=products.filter(p=>p.section===currentSection&&(currentCategory==='All'||p.category===currentCategory)&&(!term||`${p.name} ${p.category} ${p.desc}`.toLowerCase().includes(term)));
-  document.getElementById('products').innerHTML=list.length?list.map(p=>productCard(p)).join(''):'<div class="panel">कोई सामान नहीं मिला। दूसरा नाम खोजें या All चुनें।</div>';
-  renderSuggestions();
+
+function section(title,items){
+return `<div class="section-head">
+<h2>${title}</h2><span class="muted">${items.length} items</span>
+</div><div class="grid">${items.map(card).join('')}</div>`;
 }
-function productCard(p){
-  const q=cart[p.id]||0;
-  return `<article class="card"><div class="pic">${p.emoji}</div><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="controls"><div class="qty"><button onclick="changeQty(${p.id},-1)">−</button><span>${q}</span><button onclick="changeQty(${p.id},1)">+</button></div><button class="add" onclick="changeQty(${p.id},1)">Add</button></div></article>`;
+
+function home(){
+let f=raw.filter(p=>p.type==='Food');
+let g=raw.filter(p=>p.type==='Grocery');
+document.getElementById('homeSections').innerHTML=
+section('Fast Food • Popular & More',f)+
+section('Grocery • Daily Essentials',g);
 }
-function renderSuggestions(){
-  const box=document.getElementById('suggestions');
-  const cakeVisible=currentSection==='Food'&&(currentCategory==='Cake'||(document.getElementById('shopSearch').value||'').trim().toLowerCase().includes('cake'));
-  if(!cakeVisible){box.classList.add('hidden');box.innerHTML='';return}
-  box.classList.remove('hidden');
-  box.innerHTML=`<h3>🎉 Cake के साथ Birthday Celebration Items</h3><div class="note">Cake के साथ candles, balloons और party poppers भी Cart में जोड़ें।</div><div class="suggestgrid">${addOns.map(a=>{let q=cart[a.id]||0;return `<div class="mini"><span class="em">${a.emoji}</span><div style="flex:1"><b>${a.name}</b><small>${money(a.price)}</small><div class="controls"><div class="qty"><button onclick="changeAddon(${a.id},-1)">−</button><span>${q}</span><button onclick="changeAddon(${a.id},1)">+</button></div></div></div></div>`}).join('')}</div>`;
-}
-function changeQty(id,delta){
-  cart[id]=Math.max(0,(cart[id]||0)+delta);
-  if(!cart[id])delete cart[id];
-  renderProducts();renderCart();
-}
-function changeAddon(id,delta){
-  cart[id]=Math.max(0,(cart[id]||0)+delta);
-  if(!cart[id])delete cart[id];
-  renderSuggestions();renderCart();
-}
-function allItems(){return [...products,...addOns.map(a=>({...a,section:'Add-on'}))]}
-function renderCart(){
-  const items=allItems().filter(p=>cart[p.id]);
-  const count=items.reduce((s,p)=>s+cart[p.id],0);
-  const sum=items.reduce((s,p)=>s+p.price*cart[p.id],0);
-  document.getElementById('cartCount').textContent=count+' items';
-  document.getElementById('cartItems').innerHTML=items.length?items.map(p=>`<div class="cartrow"><span>${p.emoji} ${p.name} × ${cart[p.id]}</span><b>${money(p.price*cart[p.id])}</b></div>`).join(''):'Cart खाली है।';
-  document.getElementById('cartTotal').textContent=money(sum);
-  document.getElementById('checkoutButton').disabled=sum<200;
-  document.getElementById('checkoutButton').textContent=sum>0&&sum<200?'₹200 minimum पूरा करें':'Proceed to Checkout';
-}
-function showCheckout(){showPage('checkout')}
-document.getElementById('checkoutForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const items=allItems().filter(p=>cart[p.id]).map(p=>({name:p.name,price:p.price,qty:cart[p.id]}));
-  const total=items.reduce((s,p)=>s+p.price*p.qty,0);
-  if(total<200){alert('Minimum order ₹200 है।');return}
-  const orders=getOrders(),id='AV'+Date.now().toString().slice(-8);
-  orders.unshift({id,items,total,customer:document.getElementById('customerName').value,phone:document.getElementById('customerPhone').value,address:document.getElementById('customerAddress').value,payment:document.getElementById('paymentMethod').value,status:'New',created:new Date().toLocaleString('en-IN')});
-  saveOrders(orders);cart={};renderCart();e.target.reset();
-  alert('Demo order place हो गया! Order ID: '+id);showPage('orders');
+
+function showPage(p){
+page=p;
+['home','catalog','cart','orders','account'].forEach(x=>{
+document.getElementById(x+'Page').classList.toggle(
+'hide',!(x===p||((p==='food'||p==='grocery')&&x==='catalog'))
+);
 });
-function renderOrders(){
-  const orders=getOrders();
-  document.getElementById('ordersList').innerHTML=orders.length?orders.map(o=>`<div class="order"><b>Order #${o.id}</b> <span class="pill">${o.status}</span><p class="note">${o.created} • ${o.payment}</p><p>${o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')}</p><b>${money(o.total)}</b><p class="note">${o.address}</p></div>`).join(''):'अभी कोई Order नहीं है।';
+document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById('nav-'+p)?.classList.add('active');
+
+if(p==='food'||p==='grocery'){
+document.getElementById('catalogTitle').textContent=
+p==='food'?'Fast Food – सभी Items':'Grocery – सभी Items';
+renderCatalog();
 }
-function renderAdmin(){
-  const orders=getOrders(),sales=orders.reduce((s,o)=>s+o.total,0);
-  document.getElementById('adminStats').innerHTML=`<b>Total Orders:</b> ${orders.length} &nbsp; <b>Demo Sales:</b> ${money(sales)}<p class="note">यह खुला demo admin है। Live करने से पहले secure admin login जरूरी है।</p>`;
-  document.getElementById('adminOrders').innerHTML=orders.length?orders.map(o=>`<div class="order"><b>#${o.id} — ${o.customer}</b> <span class="pill">${o.status}</span><p>${o.phone} • ${o.address}</p><p>${o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')} — <b>${money(o.total)}</b></p><button onclick="updateStatus('${o.id}','Accepted')">Accept</button> <button class="light" onclick="updateStatus('${o.id}','Preparing')">Preparing</button> <button class="light" onclick="updateStatus('${o.id}','Out for delivery')">Out for delivery</button> <button class="green" onclick="updateStatus('${o.id}','Delivered')">Delivered</button> <button style="background:#b52d3b" onclick="updateStatus('${o.id}','Rejected')">Reject</button></div>`).join(''):'अभी कोई Order नहीं है।';
+if(p==='cart')renderCart();
+if(p==='orders')renderOrders();
+if(p==='account'){
+document.getElementById('loginState').textContent=
+profile?'Logged in as '+profile.email:'अभी Login नहीं है';
 }
-function updateStatus(id,status){
-  const orders=getOrders(),o=orders.find(x=>x.id===id);
-  if(o){o.status=status;saveOrders(orders);renderAdmin()}
 }
+
+function renderCatalog(){
+let items=raw.filter(p=>
+(p.type===(page==='food'?'Food':'Grocery'))&&matches(p)
+);
+document.getElementById('resultCount').textContent=items.length+' items';
+renderGrid(document.getElementById('catalogGrid'),items);
+}
+
+function matches(p){
+let q=query.trim().toLowerCase();
+return !q||(p.name+' '+p.cat+' '+p.type).toLowerCase().includes(q);
+}
+
+function add(id){
+cart[id]=(cart[id]||0)+1;
+save();
+if(page==='cart')renderCart();
+}
+
+function updateCount(){
+document.getElementById('cartCount').textContent=
+Object.values(cart).reduce((a,b)=>a+b,0);
+}
+
+function renderCart(){
+let entries=Object.entries(cart)
+.filter(([id,q])=>q>0)
+.map(([id,q])=>({p:raw.find(x=>x.id==id),q}));
+let total=entries.reduce((s,x)=>s+x.p.price*x.q,0);
+
+document.getElementById('cartContents').innerHTML=entries.length
+?entries.map(({p,q})=>`
+<div class="cart-line">
+<div><b>${p.name}</b><div class="muted">${money(p.price)} each</div></div>
+<div class="qty">
+<button onclick="changeQty(${p.id},-1)">−</button>
+${q}
+<button onclick="changeQty(${p.id},1)">+</button>
+</div>
+<b>${money(p.price*q)}</b>
+</div>`).join('')+
+`<h3>Total: ${money(total)}</h3>
+<button class="btn primary" onclick="checkout()">Place Order</button>`
+:'<div class="empty">Cart खाली है। Grocery या Fast Food से सामान जोड़ें।</div>';
+}
+
+function changeQty(id,d){
+cart[id]=(cart[id]||0)+d;
+if(cart[id]<=0)delete cart[id];
+save();
 renderCart();
+}
+
+function checkout(){
+if(!profile){
+alert('Order करने से पहले Account / Settings में Login करें।');
+showPage('account');
+return;
+}
+let items=Object.entries(cart).map(([id,q])=>({
+name:raw.find(p=>p.id==id).name,
+qty:q,
+price:raw.find(p=>p.id==id).price
+}));
+if(!items.length)return;
+
+let total=items.reduce((s,x)=>s+x.qty*x.price,0);
+let address=prompt('Delivery address लिखें:');
+if(!address)return;
+
+orders.unshift({
+id:'AV'+Date.now(),
+date:new Date().toLocaleString('en-IN'),
+items,total,address,status:'Received'
+});
+cart={};
+save();
+alert('Order इस browser में save हुआ। यह अभी वास्तविक delivery server पर नहीं गया है।');
+showPage('orders');
+}
+
+function renderOrders(){
+document.getElementById('ordersContents').innerHTML=orders.length
+?orders.map(o=>`
+<div class="panel">
+<b>${o.id}</b> • ${o.date}
+<p>${o.items.map(i=>i.name+' × '+i.qty).join(', ')}</p>
+<b>${money(o.total)}</b>
+<p class="muted">${o.address} • ${o.status}</p>
+<button class="btn" onclick="reorder('${o.id}')">Reorder</button>
+</div>`).join('')
+:'<div class="empty">अभी कोई Order History नहीं है।</div>';
+}
+
+function reorder(id){
+let o=orders.find(x=>x.id===id);
+o.items.forEach(i=>{
+let p=raw.find(p=>p.name===i.name);
+if(p)cart[p.id]=(cart[p.id]||0)+i.qty;
+});
+save();
+showPage('cart');
+}
+
+function login(){
+let e=document.getElementById('email').value.trim();
+let p=document.getElementById('password').value;
+if(!e||!p){
+alert('Email और Password भरें');
+return;
+}
+profile={email:e};
+save();
+document.getElementById('loginState').textContent=
+'Profile saved: '+e+' (यह सुरक्षित server login नहीं है)';
+}
+
+function logout(){
+profile=null;
+save();
+document.getElementById('loginState').textContent='Logout हो गया।';
+}
+
+document.getElementById('search').addEventListener('input',e=>{
+query=e.target.value;
+if(page==='home'){
+document.getElementById('homeSections').innerHTML=
+section('Search Results',raw.filter(matches));
+}else if(page==='food'||page==='grocery'){
+renderCatalog();
+}else{
+showPage('home');
+document.getElementById('homeSections').innerHTML=
+section('Search Results',raw.filter(matches));
+}
+});
+
+home();
+updateCount();
 </script>
 </body>
 </html>
