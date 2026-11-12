@@ -1,29 +1,32 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ApniVibe - Food & Grocery</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#222}
-header{background:#087f5b;color:white;padding:18px;text-align:center}
-header h1{margin:0}
-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px;background:white;position:sticky;top:0;z-index:5}
-button{border:0;border-radius:8px;padding:11px 15px;background:#087f5b;color:white;cursor:pointer}
-button.secondary{background:#555}
-button.danger{background:#c0392b}
-input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:8px}
-.container{max-width:1000px;margin:auto;padding:15px}
-.card{background:white;padding:15px;margin:12px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.price{font-weight:bold;color:#087f5b}
-.hidden{display:none}
-.small{font-size:13px;color:#666}
-h2{color:#087f5b}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row input{flex:1}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222}
+header{background:#087f5b;color:white;text-align:center;padding:22px}
+header h1{font-size:32px;margin:0}
+nav{display:flex;gap:7px;overflow-x:auto;padding:12px;background:white;position:sticky;top:0;z-index:10}
+button{border:0;background:#087f5b;color:white;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer;white-space:nowrap}
+button.red{background:#d63031}
+button.gray{background:#555}
+.page{display:none;max-width:1100px;margin:auto;padding:15px}
+.page.active{display:block}
+.hero{background:linear-gradient(120deg,#087f5b,#27ae80);color:white;padding:35px 22px;border-radius:15px}
+.card{background:white;padding:15px;border-radius:12px;margin:12px 0;box-shadow:0 2px 9px #0001}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.product img{width:100%;height:150px;object-fit:cover;border-radius:9px}
+.price{font-size:20px;font-weight:bold;color:#087f5b}
+input,textarea,select{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:8px}
+textarea{min-height:75px}
+.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
+.item div{flex:1}
+.total{font-size:22px;font-weight:bold;color:#087f5b}
+.badge{background:#e5f7ed;padding:8px;border-radius:7px;color:#087f5b}
+footer{text-align:center;padding:25px;color:#777}
 </style>
 </head>
 <body>
@@ -37,546 +40,355 @@ h2{color:#087f5b}
 <button onclick="show('home')">Home</button>
 <button onclick="show('food')">Food</button>
 <button onclick="show('grocery')">Grocery</button>
-<button onclick="show('myorders')">My Orders</button>
-<button onclick="show('login')">Login</button>
-<button onclick="logout()">Logout</button>
+<button onclick="show('cart')">Cart (<span id="count">0</span>)</button>
+<button onclick="show('orders')">My Orders</button>
+<button onclick="show('store')">Store</button>
+<button onclick="show('delivery')">Delivery</button>
+<button onclick="show('admin')">Admin</button>
 </nav>
 
-<div class="container">
-
-<section id="home">
-<div class="card">
-<h2>Welcome to ApniVibe</h2>
-<p>आपके शहर में Food और Grocery की आसान डिलीवरी।</p>
+<section id="home" class="page active">
+<div class="hero">
+<h2>Welcome to ApniVibe!</h2>
+<p>Your Food & Grocery, Delivered to Your Doorstep.</p>
+<button onclick="show('food')">Order Food</button>
+<button onclick="show('grocery')">Shop Grocery</button>
+</div>
 <div class="grid">
 <div class="card">
 <h2>🍔 Food</h2>
-<p>Restaurant, Fast Food, Pizza, Burger, Momos आदि।</p>
-<button onclick="show('food')">Order Food</button>
+<p>Fresh and Delicious Food</p>
+<button onclick="show('food')">Explore Food</button>
 </div>
 <div class="card">
 <h2>🛒 Grocery</h2>
-<p>Kirana, Milk, Fruits, Vegetables और Daily Needs।</p>
-<button onclick="show('grocery')">Order Grocery</button>
-</div>
+<p>Daily Needs at One Place</p>
+<button onclick="show('grocery')">Explore Grocery</button>
 </div>
 </div>
 </section>
 
-<section id="login" class="hidden">
+<section id="food" class="page">
 <div class="card">
-<h2>Login / Register</h2>
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<button class="secondary" onclick="register()">Customer Register</button>
-<p class="small">Provider और Admin अकाउंट केवल Admin द्वारा बनाए जाएँगे।</p>
-<p id="authmsg"></p>
+<h2>🍔 Food Menu</h2>
+<input id="foodSearch" placeholder="Search Food..." oninput="render('food')">
+<div id="foodList" class="grid"></div>
 </div>
 </section>
 
-<section id="food" class="hidden">
+<section id="grocery" class="page">
 <div class="card">
-<h2>🍔 Food Items</h2>
-<div id="foodlist" class="grid"></div>
+<h2>🛒 Grocery Store</h2>
+<input id="grocerySearch" placeholder="Search Grocery..." oninput="render('grocery')">
+<div id="groceryList" class="grid"></div>
 </div>
 </section>
 
-<section id="grocery" class="hidden">
+<section id="cart" class="page">
 <div class="card">
-<h2>🛒 Grocery Items</h2>
-<div id="grocerylist" class="grid"></div>
-</div>
-</section>
-
-<section id="cart" class="hidden">
-<div class="card">
-<h2 id="carttitle">Your Cart</h2>
-<div id="cartitems"></div>
-<h3 id="total"></h3>
-<input id="customername" placeholder="आपका नाम">
-<input id="phone" placeholder="मोबाइल नंबर">
-<textarea id="address" placeholder="पूरा डिलीवरी पता"></textarea>
+<h2>Your Cart 🛒</h2>
+<div id="cartItems"></div>
+<p class="total">Total: ₹<span id="total">0</span></p>
+<hr>
+<h3>Delivery Details</h3>
+<input id="name" placeholder="Your Name">
+<input id="phone" placeholder="10 Digit Mobile Number" maxlength="10" oninput="renderCart()">
+<textarea id="address" placeholder="Full Delivery Address"></textarea>
+<h3>Payment Method</h3>
 <select id="payment">
-<option value="COD">Cash on Delivery</option>
+<option value="COD">Cash On Delivery</option>
+<option value="UPI">UPI</option>
+<option value="CARD">Debit/Credit Card</option>
 </select>
-<button onclick="placeOrder()">Place Order</button>
+<div id="advanceInfo"></div>
+<button onclick="checkout()">Place Order</button>
+<p>Minimum Order ₹200</p>
 </div>
 </section>
 
-<section id="myorders" class="hidden">
+<section id="orders" class="page">
 <div class="card">
-<h2>My Orders</h2>
-<div id="orderlist"></div>
+<h2>My Orders / Shopping History</h2>
+<input id="historyPhone" placeholder="Enter your mobile number">
+<button onclick="renderOrders()">View Orders</button>
+<div id="orderList"></div>
 </div>
 </section>
 
-<section id="provider" class="hidden">
+<section id="store" class="page">
 <div class="card">
-<h2>Provider Dashboard</h2>
+<h2>🏪 Store Dashboard</h2>
 <h3>Add Product</h3>
 <input id="pname" placeholder="Product Name">
-<input id="pprice" type="number" placeholder="Price">
-<input id="pimage" placeholder="Image URL (optional)">
-<select id="pcategory">
+<input id="pprice" type="number" placeholder="Product Price">
+<input id="pimage" placeholder="Image URL">
+<select id="pcat">
 <option value="food">Food</option>
 <option value="grocery">Grocery</option>
 </select>
 <button onclick="addProduct()">Add Product</button>
-<h3>My Products</h3>
-<div id="myproducts"></div>
-<h3>Incoming Orders</h3>
-<div id="providerorders"></div>
+<h3>Store Orders</h3>
+<div id="storeOrders"></div>
 </div>
 </section>
 
-<section id="admin" class="hidden">
+<section id="delivery" class="page">
 <div class="card">
-<h2>Admin Dashboard</h2>
+<h2>🚴 Delivery Partner Dashboard</h2>
+<div id="deliveryOrders"></div>
+</div>
+</section>
+
+<section id="admin" class="page">
+<div class="card">
+<h2>👑 Admin Dashboard</h2>
 <h3>All Orders</h3>
-<div id="adminorders"></div>
-<h3>Provider Approval</h3>
-<div id="providers"></div>
+<div id="adminOrders"></div>
+<h3>Customer Cancellation Records</h3>
+<div id="cancelRecords"></div>
 </div>
 </section>
 
-</div>
+<footer>© 2026 ApniVibe | All Rights Reserved</footer>
 
-<script type="module">
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<script>
+const defaults=[
+{id:1,name:"Veg Pizza",price:199,cat:"food",img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500"},
+{id:2,name:"Burger",price:120,cat:"food",img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"},
+{id:3,name:"Momos",price:100,cat:"food",img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500"},
+{id:4,name:"Sandwich",price:110,cat:"food",img:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500"},
+{id:5,name:"Fresh Apples",price:140,cat:"grocery",img:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"},
+{id:6,name:"Milk 1L",price:65,cat:"grocery",img:"https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500"},
+{id:7,name:"Tomato 1kg",price:40,cat:"grocery",img:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500"},
+{id:8,name:"Rice 1kg",price:70,cat:"grocery",img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500"}
+];
 
-import {
-getAuth,createUserWithEmailAndPassword,
-signInWithEmailAndPassword,signOut,onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+let products=JSON.parse(localStorage.getItem("av_products")||"null")||defaults;
+let cart=JSON.parse(localStorage.getItem("av_cart")||"[]");
+let orders=JSON.parse(localStorage.getItem("av_orders")||"[]");
+let cancellations=JSON.parse(localStorage.getItem("av_cancellations")||"{}");
 
-import {
-getFirestore,doc,setDoc,getDoc,collection,
-addDoc,getDocs,query,where,onSnapshot,
-updateDoc,deleteDoc,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const $=id=>document.getElementById(id);
 
-/* अपना Firebase Config यहाँ डालें */
-const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_PROJECT.appspot.com",
-messagingSenderId: "YOUR_SENDER_ID",
-appId: "YOUR_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-let currentUser = null;
-let currentRole = null;
-let products = [];
-let orders = [];
-
-let foodCart = JSON.parse(localStorage.getItem("foodCart") || "[]");
-let groceryCart = JSON.parse(localStorage.getItem("groceryCart") || "[]");
-let activeCart = "food";
-
-const $ = id => document.getElementById(id);
-
-window.show = function(page){
-document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
-$(page)?.classList.remove("hidden");
-
-if(page==="food") loadProducts("food");
-if(page==="grocery") loadProducts("grocery");
-if(page==="myorders") loadMyOrders();
-if(page==="provider") loadProvider();
-if(page==="admin") loadAdmin();
-};
-
-function saveCarts(){
-localStorage.setItem("foodCart",JSON.stringify(foodCart));
-localStorage.setItem("groceryCart",JSON.stringify(groceryCart));
+function save(){
+localStorage.setItem("av_products",JSON.stringify(products));
+localStorage.setItem("av_cart",JSON.stringify(cart));
+localStorage.setItem("av_orders",JSON.stringify(orders));
+localStorage.setItem("av_cancellations",JSON.stringify(cancellations));
 }
 
-window.register = async function(){
-try{
-const email=$("email").value.trim();
-const password=$("password").value;
-if(!email || password.length<6) throw Error("Email और कम से कम 6 अक्षर का Password डालें");
-
-const result=await createUserWithEmailAndPassword(auth,email,password);
-
-await setDoc(doc(db,"users",result.user.uid),{
-email,
-role:"customer",
-createdAt:serverTimestamp()
-});
-
-alert("Customer account बन गया।");
-}catch(e){alert(e.message)}
-};
-
-window.login = async function(){
-try{
-await signInWithEmailAndPassword(
-auth,$("email").value.trim(),$("password").value
-);
-}catch(e){alert(e.message)}
-};
-
-window.logout = async function(){
-await signOut(auth);
-};
-
-onAuthStateChanged(auth,async user=>{
-currentUser=user;
-currentRole=null;
-
-if(user){
-try{
-const snap=await getDoc(doc(db,"users",user.uid));
-if(snap.exists()){
-currentRole=snap.data().role;
-}
-}catch(e){console.error(e)}
-
-if(currentRole==="provider") show("provider");
-else if(currentRole==="admin") show("admin");
-else show("home");
-}else{
-show("home");
-}
-});
-
-async function loadProducts(category){
-const list=$(category+"list");
-list.innerHTML="Loading...";
-
-try{
-const q=query(
-collection(db,"products"),
-where("category","==",category),
-where("approved","==",true)
-);
-
-const snap=await getDocs(q);
-products=snap.docs.map(d=>({id:d.id,...d.data()}));
-
-list.innerHTML="";
-
-products.forEach(p=>{
-list.innerHTML+=`
-<div class="card">
-${p.image?`<img src="${p.image}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`:""}
-<h3>${escapeHTML(p.name)}</h3>
-<p class="price">₹${Number(p.price)}</p>
-<p class="small">${escapeHTML(p.providerName||"Local Store")}</p>
-<button onclick="addToCart('${p.id}','${category}')">Add to Cart</button>
-</div>`;
-});
-
-list.innerHTML+=`
-<div class="card">
-<h3>Cart</h3>
-<button onclick="openCart('${category}')">View ${category} Cart</button>
-</div>`;
-
-}catch(e){
-list.innerHTML="Products load नहीं हुए: "+escapeHTML(e.message);
-}
+function show(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+$(id).classList.add("active");
+renderAll();
 }
 
-function escapeHTML(value){
-return String(value??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
+function render(cat){
+let q=$(cat+"Search").value.toLowerCase();
+let list=products.filter(p=>p.cat===cat&&p.name.toLowerCase().includes(q));
+$(cat+"List").innerHTML=list.map(p=>`
+<div class="card product">
+<img src="${p.img||'https://placehold.co/300x180'}" alt="${p.name}">
+<h3>${p.name}</h3>
+<p class="price">₹${p.price}</p>
+<button onclick="addCart(${p.id})">Add to Cart</button>
+</div>`).join("")||"No products found";
 }
 
-window.addToCart = async function(id,category){
-if(!currentUser){alert("पहले Login करें");show("login");return}
-
-const p=products.find(x=>x.id===id);
-if(!p)return;
-
-const cart=category==="food"?foodCart:groceryCart;
-
-if(cart.length && cart[0].providerId!==p.providerId){
-alert("एक Cart में एक ही दुकान के सामान का Order करें। पहले Cart खाली करें।");
-return;
+function addCart(id){
+let p=products.find(x=>x.id===id);
+let item=cart.find(x=>x.id===id);
+if(item)item.qty++;
+else cart.push({...p,qty:1});
+save();
+renderAll();
+alert("Product added to cart!");
 }
 
-const existing=cart.find(x=>x.id===id);
-if(existing)existing.qty++;
-else cart.push({
-id:p.id,
-name:p.name,
-price:Number(p.price),
-qty:1,
-providerId:p.providerId,
-providerName:p.providerName||"Store"
-});
-
-saveCarts();
-alert("Cart में Add हो गया।");
-};
-
-window.openCart = function(category){
-activeCart=category;
-show("cart");
-$("carttitle").innerText=category==="food"?"Food Cart":"Grocery Cart";
-renderCart();
-};
+function changeQty(id,n){
+let item=cart.find(x=>x.id===id);
+if(item)item.qty+=n;
+cart=cart.filter(x=>x.qty>0);
+save();
+renderAll();
+}
 
 function renderCart(){
-const cart=activeCart==="food"?foodCart:groceryCart;
-let total=0;
-$("cartitems").innerHTML="";
+let total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+$("count").textContent=cart.reduce((s,p)=>s+p.qty,0);
+$("total").textContent=total;
 
-cart.forEach((item,index)=>{
-total+=item.price*item.qty;
-$("cartitems").innerHTML+=`
-<div class="card">
-<b>${escapeHTML(item.name)}</b>
-<p>₹${item.price} × ${item.qty}</p>
-<button onclick="changeQty(${index},-1)">−</button>
-<button onclick="changeQty(${index},1)">+</button>
-<button class="danger" onclick="removeItem(${index})">Remove</button>
-</div>`;
-});
+$("cartItems").innerHTML=cart.map(p=>`
+<div class="item">
+<div><b>${p.name}</b><br>₹${p.price} × ${p.qty}</div>
+<button onclick="changeQty(${p.id},-1)">−</button>
+<button onclick="changeQty(${p.id},1)">+</button>
+</div>`).join("")||"Your cart is empty";
 
-$("total").innerText="Total: ₹"+total;
+let phone=$("phone").value.trim();
+let cancelCount=cancellations[phone]||0;
+
+$("advanceInfo").innerHTML=cancelCount>=5?
+`<p class="badge">आपकी 5 cancellations पूरी हो चुकी हैं। 50% Online Advance अनिवार्य है।</p>
+<p>Online Advance: ₹${Math.ceil(total/2)}</p>
+<p>COD Balance: ₹${Math.floor(total/2)}</p>`:
+`<p>Cancellation: ${cancelCount}/5</p>`;
 }
 
-window.changeQty=function(index,change){
-const cart=activeCart==="food"?foodCart:groceryCart;
-cart[index].qty+=change;
-if(cart[index].qty<=0)cart.splice(index,1);
-saveCarts();
-renderCart();
-};
-
-window.removeItem=function(index){
-const cart=activeCart==="food"?foodCart:groceryCart;
-cart.splice(index,1);
-saveCarts();
-renderCart();
-};
-
-window.placeOrder=async function(){
-if(!currentUser){alert("Login करें");return}
-
-const cart=activeCart==="food"?foodCart:groceryCart;
-if(!cart.length){alert("Cart खाली है");return}
-
-const name=$("customername").value.trim();
-const phone=$("phone").value.trim();
-const address=$("address").value.trim();
-
-if(!name||!phone||!address){
-alert("नाम, मोबाइल और पता भरें");
+function renderOrders(){
+let phone=$("historyPhone").value.trim();
+if(!/^[0-9]{10}$/.test(phone)){
+$("orderList").innerHTML="Please enter your registered mobile number.";
 return;
 }
-
-try{
-const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
-
-await addDoc(collection(db,"orders"),{
-customerId:currentUser.uid,
-customerEmail:currentUser.email,
-customerName:name,
-phone,
-address,
-category:activeCart,
-providerId:cart[0].providerId,
-providerName:cart[0].providerName,
-items:cart.map(x=>({...x})),
-total,
-payment:"COD",
-status:"Order Received",
-deliveryBoy:"",
-createdAt:serverTimestamp()
-});
-
-if(activeCart==="food")foodCart=[];
-else groceryCart=[];
-
-saveCarts();
-renderCart();
-alert("Order Successfully Placed!");
-show("myorders");
-}catch(e){alert("Order नहीं हुआ: "+e.message)}
-};
-
-window.loadMyOrders=async function(){
-if(!currentUser)return;
-$("orderlist").innerHTML="Loading...";
-
-try{
-const q=query(collection(db,"orders"),where("customerId","==",currentUser.uid));
-const snap=await getDocs(q);
-const list=snap.docs.map(d=>({id:d.id,...d.data()}));
-
-$("orderlist").innerHTML=list.length?"":"अभी कोई Order नहीं है।";
-
-list.reverse().forEach(o=>{
-$("orderlist").innerHTML+=`
+let list=orders.filter(o=>o.phone===phone);
+$("orderList").innerHTML=list.map(o=>`
 <div class="card">
-<h3>${escapeHTML(o.category.toUpperCase())} Order</h3>
-<p>Order ID: ${o.id}</p>
-<p>Amount: ₹${o.total}</p>
-<p>Status: <b>${escapeHTML(o.status)}</b></p>
-<p>Delivery: ${escapeHTML(o.deliveryBoy||"Not Assigned")}</p>
-</div>`;
-});
-}catch(e){$("orderlist").innerText=e.message}
+<b>Order #${o.id}</b>
+<p>₹${o.total}</p>
+<p>Payment: ${o.payment}</p>
+<p>Status: ${o.status}</p>
+<p>${o.cancelled?"Cancelled":"Active"}</p>
+${!o.cancelled&&o.status==="Pending"?
+`<button class="red" onclick="cancelOrder('${o.id}')">Cancel Order</button>`:""}
+</div>`).join("")||"No orders found.";
+}
+
+function checkout(){
+let total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+let name=$("name").value.trim();
+let phone=$("phone").value.trim();
+let address=$("address").value.trim();
+let payment=$("payment").value;
+let count=cancellations[phone]||0;
+
+if(!cart.length)return alert("Cart is empty!");
+if(total<200)return alert("Minimum order ₹200 required!");
+if(!name||!/^[0-9]{10}$/.test(phone)||!address)
+return alert("Please enter valid delivery details!");
+
+let advance=count>=5?Math.ceil(total/2):0;
+
+if(advance>0){
+if(payment==="COD")return alert("50% online advance payment compulsory!");
+let paid=prompt("DEMO: Enter online advance amount ₹"+advance);
+if(Number(paid)!==advance)return alert("Advance amount incorrect!");
+}else if(payment!=="COD"){
+let ok=confirm("DEMO PAYMENT ONLY: Have you completed the online payment?");
+if(!ok)return;
+}
+
+let order={
+id:Date.now().toString(),
+name,phone,address,total,
+items:cart.map(p=>({...p})),
+payment,
+advance,
+status:"Pending",
+cancelled:false,
+date:new Date().toLocaleString()
 };
 
-window.addProduct=async function(){
-if(currentRole!=="provider"){alert("Provider access required");return}
+orders.unshift(order);
+cart=[];
+save();
+renderAll();
+alert("Order placed successfully! Order ID: "+order.id);
+show("orders");
+$("historyPhone").value=phone;
+renderOrders();
+}
 
-const name=$("pname").value.trim();
-const price=Number($("pprice").value);
-const category=$("pcategory").value;
+function cancelOrder(id){
+let order=orders.find(o=>o.id===id);
+if(!order||order.cancelled)return;
+if(!confirm("Are you sure you want to cancel?"))return;
 
-if(!name||price<=0){alert("सही Product Name और Price डालें");return}
+order.cancelled=true;
+order.status="Cancelled";
+cancellations[order.phone]=(cancellations[order.phone]||0)+1;
 
-try{
-await addDoc(collection(db,"products"),{
-name,price,category,
-image:$("pimage").value.trim(),
-providerId:currentUser.uid,
-providerName:currentUser.email,
-approved:false,
-createdAt:serverTimestamp()
+save();
+renderAll();
+alert("Order cancelled. Total cancellations: "+cancellations[order.phone]+"/5");
+renderOrders();
+}
+
+function addProduct(){
+let name=$("pname").value.trim();
+let price=Number($("pprice").value);
+let img=$("pimage").value.trim();
+let cat=$("pcat").value;
+
+if(!name||price<=0)return alert("Enter valid product details!");
+
+products.push({
+id:Date.now(),
+name,price,img,cat
 });
 
-alert("Product भेज दिया गया। Admin Approval के बाद दिखेगा।");
+save();
 $("pname").value="";
 $("pprice").value="";
 $("pimage").value="";
-loadProvider();
-}catch(e){alert(e.message)}
-};
-
-async function loadProvider(){
-if(currentRole!=="provider")return;
-
-const pquery=query(
-collection(db,"products"),
-where("providerId","==",currentUser.uid)
-);
-
-const psnap=await getDocs(pquery);
-$("myproducts").innerHTML="";
-
-psnap.forEach(d=>{
-const p=d.data();
-$("myproducts").innerHTML+=`
-<div class="card">${escapeHTML(p.name)} - ₹${p.price}
-<p>${p.approved?"Approved":"Waiting for Approval"}</p>
-</div>`;
-});
-
-const oq=query(
-collection(db,"orders"),
-where("providerId","==",currentUser.uid)
-);
-
-const osnap=await getDocs(oq);
-$("providerorders").innerHTML="";
-
-osnap.forEach(d=>{
-const o=d.data();
-$("providerorders").innerHTML+=`
-<div class="card">
-<h3>${escapeHTML(o.customerName)}</h3>
-<p>${escapeHTML(o.category)} | ₹${o.total}</p>
-<p>${escapeHTML(o.address)}</p>
-<p>Status: ${escapeHTML(o.status)}</p>
-<select id="status_${d.id}">
-<option>Order Received</option>
-<option>Accepted</option>
-<option>Preparing</option>
-<option>Packed</option>
-<option>Ready for Pickup</option>
-<option>Out for Delivery</option>
-<option>Delivered</option>
-<option>Cancelled</option>
-</select>
-<button onclick="updateStatus('${d.id}')">Update Status</button>
-</div>`;
-});
+renderAll();
+alert("Product added!");
 }
 
-window.updateStatus=async function(id){
-if(currentRole!=="provider"&&currentRole!=="admin")return;
-try{
-const status=$("status_"+id).value;
-await updateDoc(doc(db,"orders",id),{status});
-alert("Order Status Updated");
-if(currentRole==="provider")loadProvider();
-else loadAdmin();
-}catch(e){alert(e.message)}
-};
-
-async function loadAdmin(){
-if(currentRole!=="admin")return;
-
-const snap=await getDocs(collection(db,"orders"));
-$("adminorders").innerHTML="";
-
-snap.forEach(d=>{
-const o=d.data();
-$("adminorders").innerHTML+=`
-<div class="card">
-<h3>${escapeHTML(o.customerName)}</h3>
-<p>${escapeHTML(o.category)} | ₹${o.total}</p>
-<p>${escapeHTML(o.phone)}</p>
-<p>${escapeHTML(o.address)}</p>
-<p>Status: ${escapeHTML(o.status)}</p>
-<input id="delivery_${d.id}" placeholder="Delivery Boy Name">
-<select id="status_${d.id}">
-<option>Order Received</option>
-<option>Accepted</option>
-<option>Preparing</option>
-<option>Packed</option>
-<option>Ready for Pickup</option>
-<option>Out for Delivery</option>
-<option>Delivered</option>
-<option>Cancelled</option>
-</select>
-<button onclick="adminUpdate('${d.id}')">Save</button>
-</div>`;
-});
-
-const users=await getDocs(
-query(collection(db,"users"),where("role","==","provider"))
-);
-
-$("providers").innerHTML="";
-
-users.forEach(d=>{
-const u=d.data();
-$("providers").innerHTML+=`
-<div class="card">
-${escapeHTML(u.email)}
-<p>Provider ID: ${d.id}</p>
-</div>`;
-});
+function updateStatus(id,status){
+let o=orders.find(x=>x.id===id);
+if(!o)return;
+o.status=status;
+save();
+renderAll();
 }
 
-window.adminUpdate=async function(id){
-if(currentRole!=="admin")return;
-try{
-await updateDoc(doc(db,"orders",id),{
-status:$("status_"+id).value,
-deliveryBoy:$("delivery_"+id).value.trim()
-});
-alert("Admin Update Saved");
-loadAdmin();
-}catch(e){alert(e.message)}
-};
+function renderDashboard(){
+$("adminOrders").innerHTML=orders.map(o=>`
+<div class="card">
+<b>Order #${o.id}</b>
+<p>${o.name} | ${o.phone}</p>
+<p>₹${o.total} | ${o.payment}</p>
+<p>${o.address}</p>
+<p>Status: ${o.status}</p>
+<select onchange="updateStatus('${o.id}',this.value)">
+<option ${o.status==="Pending"?"selected":""}>Pending</option>
+<option ${o.status==="Accepted"?"selected":""}>Accepted</option>
+<option ${o.status==="Preparing"?"selected":""}>Preparing</option>
+<option ${o.status==="Out for Delivery"?"selected":""}>Out for Delivery</option>
+<option ${o.status==="Delivered"?"selected":""}>Delivered</option>
+</select>
+</div>`).join("")||"No orders yet.";
 
+$("storeOrders").innerHTML=orders.map(o=>`
+<div class="card">
+Order #${o.id}<br>₹${o.total}<br>${o.status}
+</div>`).join("")||"No orders.";
+
+$("deliveryOrders").innerHTML=orders.filter(o=>!o.cancelled).map(o=>`
+<div class="card">
+Order #${o.id}<br>
+${o.name}<br>${o.phone}<br>${o.address}<br>
+Status: ${o.status}<br>
+<button onclick="updateStatus('${o.id}','Out for Delivery')">Picked Up</button>
+<button onclick="updateStatus('${o.id}','Delivered')">Delivered</button>
+</div>`).join("")||"No delivery orders.";
+
+$("cancelRecords").innerHTML=Object.entries(cancellations).map(([phone,count])=>`
+<div class="card">
+Customer: ${phone}<br>
+Cancellations: ${count}<br>
+${count>=5?"50% Advance Required":"Normal Checkout"}
+</div>`).join("")||"No cancellation records.";
+}
+
+function renderAll(){
+renderCart();
+render("food");
+render("grocery");
+renderDashboard();
+}
+renderAll();
 </script>
 </body>
 </html>
