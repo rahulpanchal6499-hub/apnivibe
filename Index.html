@@ -4,176 +4,579 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ff5722">
-<title>Apnivibe - Food Delivery</title>
+<title>ApniVibe - Food & Grocery</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#fff8f2;color:#292321}
-header{background:#ff5722;color:white;padding:20px 16px;border-radius:0 0 22px 22px}
-header h1{margin:0;font-size:28px}
-header p{margin:7px 0 0;font-size:14px}
-.search{width:100%;padding:13px;border:1px solid #ddd;border-radius:12px;margin-top:16px;font-size:16px}
-main{padding:16px;max-width:700px;margin:auto}
-h2{font-size:20px}
-.categories{display:flex;gap:9px;overflow:auto;padding:5px 0 15px}
-.categories button{border:0;background:#ffe2d4;padding:10px 15px;border-radius:20px;white-space:nowrap}
-.categories button.active{background:#ff5722;color:white}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.item{background:white;border-radius:15px;padding:12px;box-shadow:0 2px 9px #0000000c}
-.food{font-size:48px;text-align:center;background:#fff0e7;border-radius:12px;padding:12px}
-.item h3{font-size:16px;margin:10px 0 5px}
-.price{font-weight:bold;color:#e64a19}
-.item button,.orderbtn{width:100%;border:0;background:#ff5722;color:white;padding:11px;border-radius:9px;margin-top:10px;font-size:15px}
-.cart,.checkout{background:white;padding:15px;border-radius:15px;margin-top:20px}
-.cartrow{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #eee}
-input,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:9px;font-size:15px}
-.total{font-size:18px;font-weight:bold;margin-top:12px}
-footer{text-align:center;padding:25px;color:#777;font-size:13px}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#222}
+header{background:#087f5b;color:white;padding:18px;text-align:center}
+header h1{margin:0}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px;background:white;position:sticky;top:0;z-index:5}
+button{border:0;border-radius:8px;padding:11px 15px;background:#087f5b;color:white;cursor:pointer}
+button.secondary{background:#555}
+button.danger{background:#c0392b}
+input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:8px}
+.container{max-width:1000px;margin:auto;padding:15px}
+.card{background:white;padding:15px;margin:12px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.price{font-weight:bold;color:#087f5b}
+.hidden{display:none}
+.small{font-size:13px;color:#666}
+h2{color:#087f5b}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row input{flex:1}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🍔 Apnivibe</h1>
-  <p>आपके गाँव का अपना Food Delivery App</p>
-  <input class="search" id="search" placeholder="खाना खोजें..." oninput="renderMenu()">
+<h1>ApniVibe</h1>
+<p>Food & Grocery Delivery</p>
 </header>
 
-<main>
-  <h2>आज क्या खाना पसंद करेंगे? 😋</h2>
-  <div class="categories">
-    <button class="active" onclick="setCategory('सभी',this)">सभी</button>
-    <button onclick="setCategory('Burger',this)">🍔 Burger</button>
-    <button onclick="setCategory('Pizza',this)">🍕 Pizza</button>
-    <button onclick="setCategory('Momos',this)">🥟 Momos</button>
-    <button onclick="setCategory('Sandwich',this)">🥪 Sandwich</button>
-    <button onclick="setCategory('Drinks',this)">🥤 Drinks</button>
-  </div>
+<nav>
+<button onclick="show('home')">Home</button>
+<button onclick="show('food')">Food</button>
+<button onclick="show('grocery')">Grocery</button>
+<button onclick="show('myorders')">My Orders</button>
+<button onclick="show('login')">Login</button>
+<button onclick="logout()">Logout</button>
+</nav>
 
-  <div class="menu" id="menu"></div>
+<div class="container">
 
-  <section class="cart">
-    <h2>🛒 आपका Cart</h2>
-    <div id="cartItems">अभी Cart खाली है।</div>
-    <div class="total" id="total">कुल: ₹0</div>
-  </section>
+<section id="home">
+<div class="card">
+<h2>Welcome to ApniVibe</h2>
+<p>आपके शहर में Food और Grocery की आसान डिलीवरी।</p>
+<div class="grid">
+<div class="card">
+<h2>🍔 Food</h2>
+<p>Restaurant, Fast Food, Pizza, Burger, Momos आदि।</p>
+<button onclick="show('food')">Order Food</button>
+</div>
+<div class="card">
+<h2>🛒 Grocery</h2>
+<p>Kirana, Milk, Fruits, Vegetables और Daily Needs।</p>
+<button onclick="show('grocery')">Order Grocery</button>
+</div>
+</div>
+</div>
+</section>
 
-  <section class="checkout">
-    <h2>📦 Order की जानकारी</h2>
-    <input id="customer" placeholder="आपका नाम">
-    <input id="phone" type="tel" placeholder="मोबाइल नंबर">
-    <textarea id="address" placeholder="पूरा डिलीवरी पता"></textarea>
-    <button class="orderbtn" onclick="placeOrder()">Cash on Delivery से Order करें</button>
-    <p id="message"></p>
-  </section>
-</main>
+<section id="login" class="hidden">
+<div class="card">
+<h2>Login / Register</h2>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button class="secondary" onclick="register()">Customer Register</button>
+<p class="small">Provider और Admin अकाउंट केवल Admin द्वारा बनाए जाएँगे।</p>
+<p id="authmsg"></p>
+</div>
+</section>
 
-<footer>© 2026 Apnivibe | आपका अपना Food Delivery App ❤️</footer>
+<section id="food" class="hidden">
+<div class="card">
+<h2>🍔 Food Items</h2>
+<div id="foodlist" class="grid"></div>
+</div>
+</section>
 
-<script>
-const foods = [
- {id:1,name:"Veg Burger",price:60,cat:"Burger",emoji:"🍔"},
- {id:2,name:"Cheese Burger",price:90,cat:"Burger",emoji:"🍔"},
- {id:3,name:"Veg Pizza",price:120,cat:"Pizza",emoji:"🍕"},
- {id:4,name:"Cheese Pizza",price:160,cat:"Pizza",emoji:"🍕"},
- {id:5,name:"Veg Momos",price:60,cat:"Momos",emoji:"🥟"},
- {id:6,name:"Fried Momos",price:80,cat:"Momos",emoji:"🥟"},
- {id:7,name:"Sandwich",price:50,cat:"Sandwich",emoji:"🥪"},
- {id:8,name:"Cheese Sandwich",price:80,cat:"Sandwich",emoji:"🥪"},
- {id:9,name:"Cold Drink",price:40,cat:"Drinks",emoji:"🥤"},
- {id:10,name:"Lemon Soda",price:30,cat:"Drinks",emoji:"🍋"}
-];
+<section id="grocery" class="hidden">
+<div class="card">
+<h2>🛒 Grocery Items</h2>
+<div id="grocerylist" class="grid"></div>
+</div>
+</section>
 
-let cart = {};
-let category = "सभी";
+<section id="cart" class="hidden">
+<div class="card">
+<h2 id="carttitle">Your Cart</h2>
+<div id="cartitems"></div>
+<h3 id="total"></h3>
+<input id="customername" placeholder="आपका नाम">
+<input id="phone" placeholder="मोबाइल नंबर">
+<textarea id="address" placeholder="पूरा डिलीवरी पता"></textarea>
+<select id="payment">
+<option value="COD">Cash on Delivery</option>
+</select>
+<button onclick="placeOrder()">Place Order</button>
+</div>
+</section>
 
-function renderMenu(){
- const search = document.getElementById("search").value.toLowerCase();
- const list = foods.filter(f =>
-  (category==="सभी" || f.cat===category) &&
-  f.name.toLowerCase().includes(search)
- );
- document.getElementById("menu").innerHTML = list.map(f => `
-  <div class="item">
-   <div class="food">${f.emoji}</div>
-   <h3>${f.name}</h3>
-   <div class="price">₹${f.price}</div>
-   <button onclick="addToCart(${f.id})">+ Add</button>
-  </div>
- `).join("");
+<section id="myorders" class="hidden">
+<div class="card">
+<h2>My Orders</h2>
+<div id="orderlist"></div>
+</div>
+</section>
+
+<section id="provider" class="hidden">
+<div class="card">
+<h2>Provider Dashboard</h2>
+<h3>Add Product</h3>
+<input id="pname" placeholder="Product Name">
+<input id="pprice" type="number" placeholder="Price">
+<input id="pimage" placeholder="Image URL (optional)">
+<select id="pcategory">
+<option value="food">Food</option>
+<option value="grocery">Grocery</option>
+</select>
+<button onclick="addProduct()">Add Product</button>
+<h3>My Products</h3>
+<div id="myproducts"></div>
+<h3>Incoming Orders</h3>
+<div id="providerorders"></div>
+</div>
+</section>
+
+<section id="admin" class="hidden">
+<div class="card">
+<h2>Admin Dashboard</h2>
+<h3>All Orders</h3>
+<div id="adminorders"></div>
+<h3>Provider Approval</h3>
+<div id="providers"></div>
+</div>
+</section>
+
+</div>
+
+<script type="module">
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getAuth,createUserWithEmailAndPassword,
+signInWithEmailAndPassword,signOut,onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+getFirestore,doc,setDoc,getDoc,collection,
+addDoc,getDocs,query,where,onSnapshot,
+updateDoc,deleteDoc,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* अपना Firebase Config यहाँ डालें */
+const firebaseConfig = {
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_PROJECT.appspot.com",
+messagingSenderId: "YOUR_SENDER_ID",
+appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let currentRole = null;
+let products = [];
+let orders = [];
+
+let foodCart = JSON.parse(localStorage.getItem("foodCart") || "[]");
+let groceryCart = JSON.parse(localStorage.getItem("groceryCart") || "[]");
+let activeCart = "food";
+
+const $ = id => document.getElementById(id);
+
+window.show = function(page){
+document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+$(page)?.classList.remove("hidden");
+
+if(page==="food") loadProducts("food");
+if(page==="grocery") loadProducts("grocery");
+if(page==="myorders") loadMyOrders();
+if(page==="provider") loadProvider();
+if(page==="admin") loadAdmin();
+};
+
+function saveCarts(){
+localStorage.setItem("foodCart",JSON.stringify(foodCart));
+localStorage.setItem("groceryCart",JSON.stringify(groceryCart));
 }
 
-function setCategory(cat,btn){
- category=cat;
- document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
- btn.classList.add("active");
- renderMenu();
+window.register = async function(){
+try{
+const email=$("email").value.trim();
+const password=$("password").value;
+if(!email || password.length<6) throw Error("Email और कम से कम 6 अक्षर का Password डालें");
+
+const result=await createUserWithEmailAndPassword(auth,email,password);
+
+await setDoc(doc(db,"users",result.user.uid),{
+email,
+role:"customer",
+createdAt:serverTimestamp()
+});
+
+alert("Customer account बन गया।");
+}catch(e){alert(e.message)}
+};
+
+window.login = async function(){
+try{
+await signInWithEmailAndPassword(
+auth,$("email").value.trim(),$("password").value
+);
+}catch(e){alert(e.message)}
+};
+
+window.logout = async function(){
+await signOut(auth);
+};
+
+onAuthStateChanged(auth,async user=>{
+currentUser=user;
+currentRole=null;
+
+if(user){
+try{
+const snap=await getDoc(doc(db,"users",user.uid));
+if(snap.exists()){
+currentRole=snap.data().role;
+}
+}catch(e){console.error(e)}
+
+if(currentRole==="provider") show("provider");
+else if(currentRole==="admin") show("admin");
+else show("home");
+}else{
+show("home");
+}
+});
+
+async function loadProducts(category){
+const list=$(category+"list");
+list.innerHTML="Loading...";
+
+try{
+const q=query(
+collection(db,"products"),
+where("category","==",category),
+where("approved","==",true)
+);
+
+const snap=await getDocs(q);
+products=snap.docs.map(d=>({id:d.id,...d.data()}));
+
+list.innerHTML="";
+
+products.forEach(p=>{
+list.innerHTML+=`
+<div class="card">
+${p.image?`<img src="${p.image}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`:""}
+<h3>${escapeHTML(p.name)}</h3>
+<p class="price">₹${Number(p.price)}</p>
+<p class="small">${escapeHTML(p.providerName||"Local Store")}</p>
+<button onclick="addToCart('${p.id}','${category}')">Add to Cart</button>
+</div>`;
+});
+
+list.innerHTML+=`
+<div class="card">
+<h3>Cart</h3>
+<button onclick="openCart('${category}')">View ${category} Cart</button>
+</div>`;
+
+}catch(e){
+list.innerHTML="Products load नहीं हुए: "+escapeHTML(e.message);
+}
 }
 
-function addToCart(id){
- cart[id]=(cart[id]||0)+1;
- renderCart();
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
 }
 
-function changeQty(id,amount){
- cart[id]=(cart[id]||0)+amount;
- if(cart[id]<=0) delete cart[id];
- renderCart();
+window.addToCart = async function(id,category){
+if(!currentUser){alert("पहले Login करें");show("login");return}
+
+const p=products.find(x=>x.id===id);
+if(!p)return;
+
+const cart=category==="food"?foodCart:groceryCart;
+
+if(cart.length && cart[0].providerId!==p.providerId){
+alert("एक Cart में एक ही दुकान के सामान का Order करें। पहले Cart खाली करें।");
+return;
 }
+
+const existing=cart.find(x=>x.id===id);
+if(existing)existing.qty++;
+else cart.push({
+id:p.id,
+name:p.name,
+price:Number(p.price),
+qty:1,
+providerId:p.providerId,
+providerName:p.providerName||"Store"
+});
+
+saveCarts();
+alert("Cart में Add हो गया।");
+};
+
+window.openCart = function(category){
+activeCart=category;
+show("cart");
+$("carttitle").innerText=category==="food"?"Food Cart":"Grocery Cart";
+renderCart();
+};
 
 function renderCart(){
- let total=0;
- let html="";
- Object.keys(cart).forEach(id=>{
-  const f=foods.find(x=>x.id==id);
-  const qty=cart[id];
-  total+=f.price*qty;
-  html+=`<div class="cartrow">
-   <span>${f.emoji} ${f.name} × ${qty}</span>
-   <span>
-    ₹${f.price*qty}
-    <button onclick="changeQty(${id},-1)">−</button>
-    <button onclick="changeQty(${id},1)">+</button>
-   </span>
-  </div>`;
- });
- document.getElementById("cartItems").innerHTML=html||"अभी Cart खाली है।";
- document.getElementById("total").innerText="कुल: ₹"+total;
+const cart=activeCart==="food"?foodCart:groceryCart;
+let total=0;
+$("cartitems").innerHTML="";
+
+cart.forEach((item,index)=>{
+total+=item.price*item.qty;
+$("cartitems").innerHTML+=`
+<div class="card">
+<b>${escapeHTML(item.name)}</b>
+<p>₹${item.price} × ${item.qty}</p>
+<button onclick="changeQty(${index},-1)">−</button>
+<button onclick="changeQty(${index},1)">+</button>
+<button class="danger" onclick="removeItem(${index})">Remove</button>
+</div>`;
+});
+
+$("total").innerText="Total: ₹"+total;
 }
 
-function placeOrder(){
- const name=document.getElementById("customer").value.trim();
- const phone=document.getElementById("phone").value.trim();
- const address=document.getElementById("address").value.trim();
- const ids=Object.keys(cart);
-
- if(ids.length===0){alert("पहले Cart में खाना जोड़ें।");return;}
- if(!name||!phone||!address){alert("कृपया नाम, मोबाइल नंबर और पता भरें।");return;}
- if(!/^[6-9]\d{9}$/.test(phone)){alert("सही 10 अंकों का मोबाइल नंबर डालें।");return;}
-
- let total=0;
- let details=ids.map(id=>{
-  const f=foods.find(x=>x.id==id);
-  total+=f.price*cart[id];
-  return f.name+" x "+cart[id];
- }).join(", ");
-
- const order={
-  name,phone,address,items:details,total,
-  payment:"Cash on Delivery",
-  date:new Date().toLocaleString("hi-IN")
- };
-
- localStorage.setItem("apnivibe_last_order",JSON.stringify(order));
- document.getElementById("message").innerText=
-  "आपका Demo Order दर्ज हो गया! कुल राशि: ₹"+total+
-  ". अभी यह ऑर्डर केवल इसी फोन में सेव हुआ है।";
- cart={};
- renderCart();
-}
-
-renderMenu();
+window.changeQty=function(index,change){
+const cart=activeCart==="food"?foodCart:groceryCart;
+cart[index].qty+=change;
+if(cart[index].qty<=0)cart.splice(index,1);
+saveCarts();
 renderCart();
+};
+
+window.removeItem=function(index){
+const cart=activeCart==="food"?foodCart:groceryCart;
+cart.splice(index,1);
+saveCarts();
+renderCart();
+};
+
+window.placeOrder=async function(){
+if(!currentUser){alert("Login करें");return}
+
+const cart=activeCart==="food"?foodCart:groceryCart;
+if(!cart.length){alert("Cart खाली है");return}
+
+const name=$("customername").value.trim();
+const phone=$("phone").value.trim();
+const address=$("address").value.trim();
+
+if(!name||!phone||!address){
+alert("नाम, मोबाइल और पता भरें");
+return;
+}
+
+try{
+const total=cart.reduce((s,x)=>s+x.price*x.qty,0);
+
+await addDoc(collection(db,"orders"),{
+customerId:currentUser.uid,
+customerEmail:currentUser.email,
+customerName:name,
+phone,
+address,
+category:activeCart,
+providerId:cart[0].providerId,
+providerName:cart[0].providerName,
+items:cart.map(x=>({...x})),
+total,
+payment:"COD",
+status:"Order Received",
+deliveryBoy:"",
+createdAt:serverTimestamp()
+});
+
+if(activeCart==="food")foodCart=[];
+else groceryCart=[];
+
+saveCarts();
+renderCart();
+alert("Order Successfully Placed!");
+show("myorders");
+}catch(e){alert("Order नहीं हुआ: "+e.message)}
+};
+
+window.loadMyOrders=async function(){
+if(!currentUser)return;
+$("orderlist").innerHTML="Loading...";
+
+try{
+const q=query(collection(db,"orders"),where("customerId","==",currentUser.uid));
+const snap=await getDocs(q);
+const list=snap.docs.map(d=>({id:d.id,...d.data()}));
+
+$("orderlist").innerHTML=list.length?"":"अभी कोई Order नहीं है।";
+
+list.reverse().forEach(o=>{
+$("orderlist").innerHTML+=`
+<div class="card">
+<h3>${escapeHTML(o.category.toUpperCase())} Order</h3>
+<p>Order ID: ${o.id}</p>
+<p>Amount: ₹${o.total}</p>
+<p>Status: <b>${escapeHTML(o.status)}</b></p>
+<p>Delivery: ${escapeHTML(o.deliveryBoy||"Not Assigned")}</p>
+</div>`;
+});
+}catch(e){$("orderlist").innerText=e.message}
+};
+
+window.addProduct=async function(){
+if(currentRole!=="provider"){alert("Provider access required");return}
+
+const name=$("pname").value.trim();
+const price=Number($("pprice").value);
+const category=$("pcategory").value;
+
+if(!name||price<=0){alert("सही Product Name और Price डालें");return}
+
+try{
+await addDoc(collection(db,"products"),{
+name,price,category,
+image:$("pimage").value.trim(),
+providerId:currentUser.uid,
+providerName:currentUser.email,
+approved:false,
+createdAt:serverTimestamp()
+});
+
+alert("Product भेज दिया गया। Admin Approval के बाद दिखेगा।");
+$("pname").value="";
+$("pprice").value="";
+$("pimage").value="";
+loadProvider();
+}catch(e){alert(e.message)}
+};
+
+async function loadProvider(){
+if(currentRole!=="provider")return;
+
+const pquery=query(
+collection(db,"products"),
+where("providerId","==",currentUser.uid)
+);
+
+const psnap=await getDocs(pquery);
+$("myproducts").innerHTML="";
+
+psnap.forEach(d=>{
+const p=d.data();
+$("myproducts").innerHTML+=`
+<div class="card">${escapeHTML(p.name)} - ₹${p.price}
+<p>${p.approved?"Approved":"Waiting for Approval"}</p>
+</div>`;
+});
+
+const oq=query(
+collection(db,"orders"),
+where("providerId","==",currentUser.uid)
+);
+
+const osnap=await getDocs(oq);
+$("providerorders").innerHTML="";
+
+osnap.forEach(d=>{
+const o=d.data();
+$("providerorders").innerHTML+=`
+<div class="card">
+<h3>${escapeHTML(o.customerName)}</h3>
+<p>${escapeHTML(o.category)} | ₹${o.total}</p>
+<p>${escapeHTML(o.address)}</p>
+<p>Status: ${escapeHTML(o.status)}</p>
+<select id="status_${d.id}">
+<option>Order Received</option>
+<option>Accepted</option>
+<option>Preparing</option>
+<option>Packed</option>
+<option>Ready for Pickup</option>
+<option>Out for Delivery</option>
+<option>Delivered</option>
+<option>Cancelled</option>
+</select>
+<button onclick="updateStatus('${d.id}')">Update Status</button>
+</div>`;
+});
+}
+
+window.updateStatus=async function(id){
+if(currentRole!=="provider"&&currentRole!=="admin")return;
+try{
+const status=$("status_"+id).value;
+await updateDoc(doc(db,"orders",id),{status});
+alert("Order Status Updated");
+if(currentRole==="provider")loadProvider();
+else loadAdmin();
+}catch(e){alert(e.message)}
+};
+
+async function loadAdmin(){
+if(currentRole!=="admin")return;
+
+const snap=await getDocs(collection(db,"orders"));
+$("adminorders").innerHTML="";
+
+snap.forEach(d=>{
+const o=d.data();
+$("adminorders").innerHTML+=`
+<div class="card">
+<h3>${escapeHTML(o.customerName)}</h3>
+<p>${escapeHTML(o.category)} | ₹${o.total}</p>
+<p>${escapeHTML(o.phone)}</p>
+<p>${escapeHTML(o.address)}</p>
+<p>Status: ${escapeHTML(o.status)}</p>
+<input id="delivery_${d.id}" placeholder="Delivery Boy Name">
+<select id="status_${d.id}">
+<option>Order Received</option>
+<option>Accepted</option>
+<option>Preparing</option>
+<option>Packed</option>
+<option>Ready for Pickup</option>
+<option>Out for Delivery</option>
+<option>Delivered</option>
+<option>Cancelled</option>
+</select>
+<button onclick="adminUpdate('${d.id}')">Save</button>
+</div>`;
+});
+
+const users=await getDocs(
+query(collection(db,"users"),where("role","==","provider"))
+);
+
+$("providers").innerHTML="";
+
+users.forEach(d=>{
+const u=d.data();
+$("providers").innerHTML+=`
+<div class="card">
+${escapeHTML(u.email)}
+<p>Provider ID: ${d.id}</p>
+</div>`;
+});
+}
+
+window.adminUpdate=async function(id){
+if(currentRole!=="admin")return;
+try{
+await updateDoc(doc(db,"orders",id),{
+status:$("status_"+id).value,
+deliveryBoy:$("delivery_"+id).value.trim()
+});
+alert("Admin Update Saved");
+loadAdmin();
+}catch(e){alert(e.message)}
+};
+
 </script>
 </body>
 </html>
